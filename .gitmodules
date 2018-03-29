@@ -1,0 +1,3 @@
+[submodule "jboss-guestbook/roles/ansible-role-mysql"]
+	path = jboss-guestbook/roles/ansible-role-mysql
+	url = https://github.com/geerlingguy/ansible-role-mysql.git
