@@ -17,6 +17,6 @@ Vagrant.configure("2") do |config|
     # if in the future we'll want to refactor to provision at once this is the hint: 
 		#jbossapp.vm.provision "ansible" do |ansible|
     #  ansible.verbose = "v"
-    #  ansible.playbook = "playbook.yml"
+    #  ansible.playbook = "jboss-guestbook/site.yml"
 	end
 end
