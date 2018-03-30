@@ -8,11 +8,7 @@ Vagrant.configure("2") do |config|
 		ansiblesrv.vm.hostname = "ansible-server"
 		ansiblesrv.vm.box = "hashicorp/precise64"
 		ansiblesrv.vm.network :private_network, ip: "192.168.56.101"
-		ansiblesrv.vm.provision "shell", inline: <<-SHELL
-			apt-get update
-			apt-get install -y ansible
-			
-  		SHELL
+		ansiblesrv.vm.provision "shell", path: "ansible-srv-install.sh"
 	end
 	config.vm.define "jbossapp" do |jbossapp|
 		jbossapp.vm.hostname = "jboss-app"
