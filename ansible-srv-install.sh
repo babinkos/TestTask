@@ -8,7 +8,7 @@ sudo apt-add-repository ppa:ansible/ansible -y
 sudo apt-get update
 sudo apt-get install ansible -y
 sudo ansible-galaxy install geerlingguy.mysql
-sudo echo "[db-servers]" > /etc/ansible/hosts
-sudo echo "192.168.56.102" >> /etc/ansible/hosts
-sudo echo "[web-servers]" >> /etc/ansible/hosts
-sudo echo "192.168.56.102" >> /etc/ansible/hosts
+echo "[db-servers]" | sudo tee /etc/ansible/hosts
+echo "192.168.56.102" | sudo tee --append /etc/ansible/hosts
+echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
+echo "192.168.56.102" | sudo tee --append /etc/ansible/hosts
