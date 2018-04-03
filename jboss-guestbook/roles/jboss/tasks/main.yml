@@ -1,14 +1,13 @@
 ---
 # tasks file for jboss
-  - name: install openjdk 
+  - name: install openjdk rpm
     package:
-      name: "{{ item }}"
+      name: java-1.8.0-openjdk
       state: present
-      with_items:
-        - java-1.8.0-openjdk
       when:
       - ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux"
-      
+ 
+  - name: install openjdk deb     
     package:
       name: openjdk-8-jdk
       state: present
