@@ -24,3 +24,13 @@ fi
 #sudo apt-get install git
 #git clone -b dev https://github.com/babinkos/TestTask.git
 #cd /TestTask/jboss-guestbook
+mkdir TestTask
+cd TestTask
+git init
+git remote add -f origin https://github.com/babinkos/TestTask.git
+git config core.sparseCheckout true
+echo "jboss-guestbook" >> .git/info/sparse-checkout
+git pull origin master
+git checkout dev
+sudo chown -R vagrant:vagrant /home/vagrant/TestTask 
+ansible-playbook /home/vagrant/TestTask/jboss-guestbook/ --check
