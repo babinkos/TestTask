@@ -12,3 +12,6 @@ echo "[db-servers]" | sudo tee /etc/ansible/hosts
 echo "192.168.56.102" | sudo tee --append /etc/ansible/hosts
 echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
 echo "192.168.56.102" | sudo tee --append /etc/ansible/hosts
+#sudo apt-get install git
+#git clone -b dev https://github.com/babinkos/TestTask.git
+#cd /TestTask/jboss-guestbook
