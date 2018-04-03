@@ -4,4 +4,19 @@
     extensions:
         - json
         - jsn
-       
+
+- name: configure and deploy the webservers and application code
+  hosts: web-servers
+# not sure
+# remote_user: root
+
+  roles:
+    - jboss
+#    - guestbookapp
+
+#- name: deploy MySQL and configure the databases
+#  hosts: db-servers
+# remote_user: root
+
+#  roles:
+#    - mysql-gb-db       
