@@ -4,7 +4,7 @@
     - group_vars/all/params.json
 
 - name: configure and deploy the webservers and application code
-  hosts: webservers
+  hosts: web-servers
 # not sure
 # remote_user: root
 
