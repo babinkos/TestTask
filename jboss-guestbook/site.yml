@@ -1,9 +1,10 @@
 - name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
+  hosts: all
   vars_files:
     - group_vars/all/params.json
 
 - name: configure and deploy the webservers and application code
-  hosts: web-servers
+  hosts: webservers
 # not sure
 # remote_user: root
 
