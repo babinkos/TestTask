@@ -19,4 +19,12 @@ Vagrant.configure("2") do |config|
     #  ansible.verbose = "v"
     #  ansible.playbook = "jboss-guestbook/site.yml"
 	end
+  config.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
+  config.vm.provision "shell" do |s|
+  s.inline = <<-SHELL
+    chown vagrant /home/vagrant/.ssh/id_rsa
+    chmod 400 /home/vagrant/.ssh/id_rsa
+  SHELL
+  end
+
 end

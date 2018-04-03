@@ -6,7 +6,7 @@
 - name: configure and deploy the webservers and application code
   hosts: web-servers
 # not sure
-# remote_user: root
+  remote_user: root
 
   roles:
     - jboss
