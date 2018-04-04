@@ -7,10 +7,16 @@
     state: latest
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
+- debug:
+    msg: "System {{ inventory_hostname }} has OS type: {{ ansible_distribution }}"
+
 - name: Check that the java app files already exists
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
   register: dirstate
+
+- debug:
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state is {{ stat_result.dirstate.exists }}"
   
 - name: Download app zip and Unarchive
   unarchive:
