@@ -1,8 +1,10 @@
 ---
 # tasks file for jboss
-   apt:
+- name: install openjdk
+  become: yes
+  apt:
     name: openjdk-8-jdk
     state: latest
-    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
  
       
