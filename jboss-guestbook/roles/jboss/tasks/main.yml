@@ -6,5 +6,15 @@
     name: openjdk-8-jdk
     state: latest
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: Download app zip and Unarchive
+  unarchive:
+    src: jboss_repo
+    dest: jboss_dirname
+    remote_src: yes
  
-      
+- name: Remove <elastic-load-balancer> section
+  xml:
+    path: {{ jboss_dirname + '/' + jboss_configfile }}
+    xpath: /cumulogic-app/services/@elastic-load-balancer
+    state: absent
