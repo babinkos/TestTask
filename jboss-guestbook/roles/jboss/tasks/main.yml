@@ -61,7 +61,7 @@
   become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_jarfile }}"
-  register: filestate
+  register: jarstate
  
 - debug:
     msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
