@@ -1,2 +1,25 @@
 ---
 # tasks file for guestbookapp
+
+#- name: Check that the gb xml file exists or not
+#  become: yes
+#  stat:
+#    path: "{{ gb_dirname + '/' + gb_configfile }}"
+#  register: xmlfilestate
+ 
+#- debug:
+#    msg: "filepath {{ gb_dirname + '/' + gb_configfile }} state exists {{ xmlfilestate.stat.exists }}"
+
+#deployment
+#1. cp target/example.war $AS/standalone/deployments
+#2. (Manual mode only) touch $AS/standalone/deployments/example.war.dodeploy
+
+
+
+#- name: Remove <elastic-load-balancer> section
+#  become: yes
+#  xml:
+#    path: "{{ gb_dirname + '/' + gb_configfile }}"
+#    xpath: /cumulogic-app/services/@elastic-load-balancer
+#    state: absent
+#  when: xmlfilestate.stat.exists == True 

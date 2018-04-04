@@ -13,7 +13,7 @@
     - 'unzip'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Check that the java app directory already exists
+- name: Check that the jboss directory already exists
   become: yes
   stat:
     path: "{{ jboss_dirname }}"
@@ -22,14 +22,14 @@
 - debug:
     msg: "filepath {{ jboss_dirname }} state exists {{ dirstate.stat.exists }}"
 
-- name: Check that the java app config file already exists
+- name: Check that the jboss jar file already exists
   become: yes
   stat:
-    path: "{{ jboss_dirname + '/' + jboss_configfile }}"
-  register: conffilestate
+    path: "{{ jboss_dirname + '/' + jboss_jarfile }}"
+  register: jarstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ conffilestate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ jarstate.stat.exists }}"
 
 - name: Create subdir for jboss app if not exists
   become: yes
@@ -39,7 +39,7 @@
     mode: 0755
   when: dirstate.stat.exists == False
 
-- name: Check that the java app directory exists or not
+- name: Check that the jboss directory exists or not
   become: yes
   stat:
     path: "{{ jboss_dirname }}"
@@ -53,24 +53,18 @@
   unarchive:
     src: "{{ jboss_repo }}"
     dest: "{{ jboss_dirname }}"
-    creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
+    creates: "{{ jboss_dirname + '/' + jboss_jarfile }}"
     remote_src: yes
-  when: conffilestate.stat.exists == False and  dirstate.stat.exists == True
+  when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
-- name: Check that the java app config file exists or not
+- name: Check that the jboss jar file exists or not
   become: yes
   stat:
-    path: "{{ jboss_dirname + '/' + jboss_configfile }}"
+    path: "{{ jboss_dirname + '/' + jboss_jarfile }}"
   register: filestate
  
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ filestate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
  
-- name: Remove <elastic-load-balancer> section
-  become: yes
-  xml:
-    path: "{{ jboss_dirname + '/' + jboss_configfile }}"
-    xpath: /cumulogic-app/services/@elastic-load-balancer
-    state: absent
-  when: filestate.stat.exists == True 
+
     
