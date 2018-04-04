@@ -5,9 +5,9 @@
   apt:
     name: "{{ items }}"
     state: latest
-    with_items:
-      - openjdk-8-jdk
-      - unzip
+  with_items:
+    - openjdk-8-jdk
+    - unzip
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - debug:
