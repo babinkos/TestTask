@@ -22,7 +22,7 @@
 - name: Create subdir for jboss app if not exists
   become: yes
   file:
-    path: jboss_dirname
+    path: "{{ jboss_dirname }}"
     state: directory
     mode: 0755
     when: dirstate.stat.exists == False
@@ -33,8 +33,8 @@
 - name: Download app zip and Unarchive
   become: yes
   unarchive:
-    src: jboss_repo
-    dest: jboss_dirname
+    src: "{{ jboss_repo }}"
+    dest: "{{ jboss_dirname }}"
     creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
     remote_src: yes
     when: dirstate.stat.exists == False 
