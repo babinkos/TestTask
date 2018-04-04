@@ -66,5 +66,12 @@
 - debug:
     msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
  
-
+- name: add OS user and jboss users
+  user:
+    name: "{{ jboss_svc_username }}"
+  shell: "{{ item }}"
+  with_items:
+    - 'sudo chown -fR {{ jboss_svc_username }}:{{ jboss_svc_username }} {{ jboss_rootdir }}'
+    - 'su -c "add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
+    - 'su -c "add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}" {{ jboss_svc_username }}'
     
