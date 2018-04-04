@@ -2,6 +2,7 @@
 	"application_repo": "https://web.archive.org/web/20160429180656/http://www.cumulogic.com/download/Apps/guestbookapp.zip",
 	"jboss_repo": "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip",
 	"jboss_dirname": "/usr/share/jboss-as-7.1.1.Final/bin",
+	"jboss_configfile": "guestbookapp.xml",
 	"jboss_svc_username": "jboss-svc",
 	"jboss_mgmt_username": "jboss-mgmt",
 	"jboss_app_username": "jboss-app",
