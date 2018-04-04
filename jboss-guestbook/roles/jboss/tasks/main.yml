@@ -60,11 +60,14 @@
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
   register: conffilestate
  
+- debug:
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ conffilestate.stat.exists }}"
+ 
 - name: Remove <elastic-load-balancer> section
   become: yes
   xml:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
     xpath: /cumulogic-app/services/@elastic-load-balancer
     state: absent
-  when: confilestate.stat.exists == True 
+  when: conffilestate.stat.exists == True 
     

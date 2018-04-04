@@ -33,4 +33,4 @@ echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin master
 git checkout dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask 
-ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml --check
+ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml
