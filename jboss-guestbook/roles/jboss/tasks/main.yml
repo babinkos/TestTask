@@ -29,7 +29,7 @@
   register: jarstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ jarstate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
 
 - name: Create subdir for jboss app if not exists
   become: yes
