@@ -81,7 +81,7 @@
     recurse: yes
     owner: "{{ jboss_svc_username }}"
     group: "{{ jboss_svc_username }}"
-    mode: 01754
+#    mode: 754
 
 - name: add jboss users
   become: yes
@@ -89,6 +89,10 @@
   become_user: "{{ jboss_svc_username }}"
   command: "{{ item }}"
   with_items:
-    - "cd {{ jboss_bindir }};./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" 
-    - "cd {{ jboss_bindir }};./add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}"
-    
+    - "cd {{ jboss_bindir }}"
+    - "ls -l"
+    - "./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" 
+    - "./add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}"
+
+- debug:
+    msg: "command from previous task: ./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"   

@@ -31,6 +31,6 @@ git remote add -f origin https://github.com/babinkos/TestTask.git
 git config core.sparseCheckout true
 echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin dev
-git checkout dev
+#git checkout dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask 
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml
