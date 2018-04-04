@@ -17,11 +17,21 @@
 
 - debug:
     msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
+
+- file:
+    path: jboss_dirname
+    state: directory
+    mode: 0755
+    when: dirstate.stat.exists == False
+
+- debug:
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
   
 - name: Download app zip and Unarchive
   unarchive:
     src: jboss_repo
     dest: jboss_dirname
+    creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
     remote_src: yes
     when: dirstate.stat.exists == False 
  
