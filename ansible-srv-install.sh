@@ -29,7 +29,7 @@ cd TestTask
 git init
 git remote add -f origin https://github.com/babinkos/TestTask.git
 git config core.sparseCheckout true
-echo "jboss-guestbook" >> .git/info/sparse-checkout
+echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin master
 git checkout dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask 
