@@ -67,6 +67,7 @@
     msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
  
 - name: add OS user for jboss service
+  become: yes
   user:
     name: "{{ jboss_svc_username }}"
 
