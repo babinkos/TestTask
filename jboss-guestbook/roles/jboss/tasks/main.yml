@@ -73,12 +73,19 @@
   become: yes
   user:
     name: "{{ jboss_svc_username }}"
+    
+- name: set owner for jboss folder
+   file:
+    path: "{{ jboss_rootdir }}"
+    recurse: yes
+    owner: "{{ jboss_svc_username }}"
+    group: "{{ jboss_svc_username }}"
+    mode: 01754
 
 - name: add jboss users
   become: yes
   command: "{{ item }}"
   with_items:
-    - 'chown -fR {{ jboss_svc_username }}:{{ jboss_svc_username }} {{ jboss_rootdir }}'
-    - 'su -c "{{ jboss_bindir }}/add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
+    - 'su -c "cd {{ jboss_bindir }};./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
     - 'su -c "{{ jboss_bindir }}/add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}" {{ jboss_svc_username }}'
     
