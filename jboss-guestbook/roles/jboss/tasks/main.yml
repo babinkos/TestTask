@@ -1,26 +1,32 @@
 ---
 # tasks file for jboss
+- debug:
+    msg: "System {{ inventory_hostname }} has OS type: {{ ansible_distribution }}"
+
 - name: install openjdk, unzip
   become: yes
   apt:
-    name: "{{ items }}"
+    name: "{{ item }}"
     state: latest
   with_items:
-    - openjdk-8-jdk
-    - unzip
+    - 'openjdk-8-jdk'
+    - 'unzip'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- debug:
-    msg: "System {{ inventory_hostname }} has OS type: {{ ansible_distribution }}"
+- name: Check that the java app files already exists
+  become: yes
+  stat:
+    path: "{{ jboss_dirname }}"
+  register: dirstate
 
 - name: Check that the java app files already exists
   become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
-  register: dirstate
+  register: conffilestate
 
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ conffile.stat.exists }}"
 
 - name: Create subdir for jboss app if not exists
   become: yes
@@ -30,8 +36,14 @@
     mode: 0755
   when: dirstate.stat.exists == False
 
+- name: Check that the java app files already exists
+  become: yes
+  stat:
+    path: "{{ jboss_dirname }}"
+  register: dirstate
+
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname }} state exists {{ dirstate.stat.exists }}"
   
 - name: Download app zip and Unarchive
   become: yes
@@ -41,6 +53,12 @@
     creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
     remote_src: yes
   when: dirstate.stat.exists == False 
+
+- name: Check that the java app files already exists
+  become: yes
+  stat:
+    path: "{{ jboss_dirname + '/' + jboss_configfile }}"
+  register: conffilestate
  
 - name: Remove <elastic-load-balancer> section
   become: yes
@@ -48,3 +66,5 @@
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
     xpath: /cumulogic-app/services/@elastic-load-balancer
     state: absent
+  when: confilestate.stat.exists == True 
+    
