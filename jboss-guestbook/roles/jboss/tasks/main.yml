@@ -57,6 +57,9 @@
     remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
+- debug:
+    msg: "clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"
+
 - name: Check that the jboss jar file exists or not
   become: yes
   stat:
@@ -76,6 +79,6 @@
   command: "{{ item }}"
   with_items:
     - 'chown -fR {{ jboss_svc_username }}:{{ jboss_svc_username }} {{ jboss_rootdir }}'
-    - 'su -c "add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
-    - 'su -c "add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}" {{ jboss_svc_username }}'
+    - 'su -c "{{ jboss_bindir }}/add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
+    - 'su -c "{{ jboss_bindir }}/add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}" {{ jboss_svc_username }}'
     
