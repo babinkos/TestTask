@@ -1,10 +1,13 @@
 ---
 # tasks file for jboss
-- name: install openjdk
+- name: install openjdk, unzip
   become: yes
   apt:
-    name: openjdk-8-jdk
+    name: "{{ items }}"
     state: latest
+    with_items:
+      - openjdk-8-jdk
+      - unzip
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - debug:
@@ -25,7 +28,7 @@
     path: "{{ jboss_dirname }}"
     state: directory
     mode: 0755
-    when: dirstate.stat.exists == False
+  when: dirstate.stat.exists == False
 
 - debug:
     msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
@@ -37,7 +40,7 @@
     dest: "{{ jboss_dirname }}"
     creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
     remote_src: yes
-    when: dirstate.stat.exists == False 
+  when: dirstate.stat.exists == False 
  
 - name: Remove <elastic-load-balancer> section
   become: yes
