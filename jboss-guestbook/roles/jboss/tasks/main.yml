@@ -16,14 +16,14 @@
   register: dirstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state is {{ stat_result.dirstate.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
   
 - name: Download app zip and Unarchive
   unarchive:
     src: jboss_repo
     dest: jboss_dirname
     remote_src: yes
-    when: stat_result.dirstate.exists == False 
+    when: dirstate.stat.exists == False 
  
 - name: Remove <elastic-load-balancer> section
   xml:
