@@ -1,11 +1,3 @@
-- name: dependency provisioning
-  hosts: all
-  become: yes
-  become_method: sudo
-  gather_facts: false
-  tasks:
-    - name: install python2
-      raw: sudo apt-get -y install python-simplejson
       
 - name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
   hosts: all
