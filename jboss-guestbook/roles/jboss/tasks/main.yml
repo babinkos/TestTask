@@ -16,25 +16,25 @@
 - name: Check that the jboss directory already exists
   become: yes
   stat:
-    path: "{{ jboss_dirname }}"
+    path: "{{ jboss_rootdir }}"
   register: dirstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname }} state exists {{ dirstate.stat.exists }}"
+    msg: "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
 
 - name: Check that the jboss jar file already exists
   become: yes
   stat:
-    path: "{{ jboss_dirname + '/' + jboss_jarfile }}"
+    path: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
   register: jarstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+    msg: "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
 
 - name: Create subdir for jboss app if not exists
   become: yes
   file:
-    path: "{{ jboss_dirname }}"
+    path: "{{ jboss_rootdir }}"
     state: directory
     mode: 0755
   when: dirstate.stat.exists == False
@@ -42,18 +42,18 @@
 - name: Check that the jboss directory exists or not
   become: yes
   stat:
-    path: "{{ jboss_dirname }}"
+    path: "{{ jboss_rootdir }}"
   register: dirstate
 
 - debug:
-    msg: "filepath {{ jboss_dirname }} state exists {{ dirstate.stat.exists }}"
+    msg: "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
   
 - name: Download app zip and Unarchive
   become: yes
   unarchive:
     src: "{{ jboss_repo }}"
-    dest: "{{ jboss_dirname }}"
-    creates: "{{ jboss_dirname + '/' + jboss_jarfile }}"
+    dest: "{{ jboss_unzip_dirname }}"
+    creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
     remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
@@ -63,11 +63,11 @@
 - name: Check that the jboss jar file exists or not
   become: yes
   stat:
-    path: "{{ jboss_dirname + '/' + jboss_jarfile }}"
+    path: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
   register: jarstate
  
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+    msg: "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
  
 - name: add OS user for jboss service
   become: yes
