@@ -75,7 +75,7 @@
     name: "{{ jboss_svc_username }}"
     
 - name: set owner for jboss folder
-   file:
+  file:
     path: "{{ jboss_rootdir }}"
     recurse: yes
     owner: "{{ jboss_svc_username }}"
