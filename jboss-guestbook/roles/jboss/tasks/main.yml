@@ -11,6 +11,7 @@
     msg: "System {{ inventory_hostname }} has OS type: {{ ansible_distribution }}"
 
 - name: Check that the java app files already exists
+  become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
   register: dirstate
@@ -18,7 +19,9 @@
 - debug:
     msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
 
-- file:
+- name: Create subdir for jboss app if not exists
+  become: yes
+  file:
     path: jboss_dirname
     state: directory
     mode: 0755
@@ -28,6 +31,7 @@
     msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ dirstate.stat.exists }}"
   
 - name: Download app zip and Unarchive
+  become: yes
   unarchive:
     src: jboss_repo
     dest: jboss_dirname
@@ -36,6 +40,7 @@
     when: dirstate.stat.exists == False 
  
 - name: Remove <elastic-load-balancer> section
+  become: yes
   xml:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
     xpath: /cumulogic-app/services/@elastic-load-balancer
