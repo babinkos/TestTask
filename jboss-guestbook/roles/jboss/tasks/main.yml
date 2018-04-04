@@ -19,7 +19,10 @@
     path: "{{ jboss_dirname }}"
   register: dirstate
 
-- name: Check that the java app files already exists
+- debug:
+    msg: "filepath {{ jboss_dirname }} state exists {{ dirstate.stat.exists }}"
+
+- name: Check that the java app config file already exists
   become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
@@ -36,7 +39,7 @@
     mode: 0755
   when: dirstate.stat.exists == False
 
-- name: Check that the java app files already exists
+- name: Check that the java app directory already exists
   become: yes
   stat:
     path: "{{ jboss_dirname }}"
@@ -54,14 +57,14 @@
     remote_src: yes
   when: dirstate.stat.exists == False 
 
-- name: Check that the java app files already exists
+- name: Check that the java app config file already exists
   become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
-  register: conffilestate
+  register: filestate
  
 - debug:
-    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ conffilestate.stat.exists }}"
+    msg: "filepath {{ jboss_dirname + '/' + jboss_configfile }} state exists {{ filestate.stat.exists }}"
  
 - name: Remove <elastic-load-balancer> section
   become: yes
@@ -69,5 +72,5 @@
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
     xpath: /cumulogic-app/services/@elastic-load-balancer
     state: absent
-  when: conffilestate.stat.exists == True 
+  when: filestate.stat.exists == True 
     
