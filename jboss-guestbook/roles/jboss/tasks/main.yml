@@ -72,9 +72,10 @@
     name: "{{ jboss_svc_username }}"
 
 - name: add jboss users
-  shell: "{{ item }}"
+  become: yes
+  command: "{{ item }}"
   with_items:
-    - 'sudo chown -fR {{ jboss_svc_username }}:{{ jboss_svc_username }} {{ jboss_rootdir }}'
+    - 'chown -fR {{ jboss_svc_username }}:{{ jboss_svc_username }} {{ jboss_rootdir }}'
     - 'su -c "add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" {{ jboss_svc_username }}' 
     - 'su -c "add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}" {{ jboss_svc_username }}'
     
