@@ -55,7 +55,7 @@
     dest: "{{ jboss_dirname }}"
     creates: "{{ jboss_dirname + '/' + jboss_configfile }}"
     remote_src: yes
-  when: dirstate.stat.exists == False 
+  when: conffilestate.stat.exists == False and  dirstate.stat.exists == True
 
 - name: Check that the java app config file exists or not
   become: yes
