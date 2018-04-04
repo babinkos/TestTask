@@ -13,7 +13,7 @@
     - 'unzip'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Check that the java app files already exists
+- name: Check that the java app directory already exists
   become: yes
   stat:
     path: "{{ jboss_dirname }}"
@@ -39,7 +39,7 @@
     mode: 0755
   when: dirstate.stat.exists == False
 
-- name: Check that the java app directory already exists
+- name: Check that the java app directory exists or not
   become: yes
   stat:
     path: "{{ jboss_dirname }}"
@@ -57,7 +57,7 @@
     remote_src: yes
   when: dirstate.stat.exists == False 
 
-- name: Check that the java app config file already exists
+- name: Check that the java app config file exists or not
   become: yes
   stat:
     path: "{{ jboss_dirname + '/' + jboss_configfile }}"
