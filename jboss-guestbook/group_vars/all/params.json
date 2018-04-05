@@ -14,5 +14,6 @@
 	"jboss_app_username": "jboss-app",
 	"jboss_app_pass": "some",
 	"mysql_hostname": "localhost",
-	"mysql_port": "3306"
+	"mysql_port": "3306",
+	"ansible_ssh_common_args": "-o StrictHostKeyChecking=no"
 }
