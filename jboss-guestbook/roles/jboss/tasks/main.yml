@@ -96,6 +96,14 @@
     group: "{{ jboss_svc_username }}"
 #    mode: 754
 
+# issue with jboss jar workaround (see https://stackoverflow.com/questions/48403832/javax-xml-parsers-factoryconfigurationerror-running-jboss-as-7-1-with-java-7-upd)
+- name: hotfix for jboss-modules.jar
+  get_url:
+# uncomment after tests
+#    url: "{{ jboss_hotfix }}"
+    url: file:///tmp/jboss-modules-1.1.5.GA.jar
+    dest: " {{ jboss_rootdir }}/jboss-modules.jar"
+
 - name: add jboss users
   become: yes
   become_method: sudo

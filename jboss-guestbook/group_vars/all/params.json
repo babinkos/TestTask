@@ -1,6 +1,7 @@
 {
 	"application_repo": "https://web.archive.org/web/20160429180656/http://www.cumulogic.com/download/Apps/guestbookapp.zip",
 	"jboss_repo": "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip",
+	"jboss_hotfix": "http://repo1.maven.org/maven2/org/jboss/modules/jboss-modules/1.1.5.GA/jboss-modules-1.1.5.GA.jar",
 	"jboss_unzip_dirname": "/usr/local/share/jboss",
 	"jboss_rootdir": "{{ jboss_unzip_dirname }}/jboss-as-7.1.1.Final",
 	"jboss_bindir": "{{ jboss_rootdir }}/bin",
