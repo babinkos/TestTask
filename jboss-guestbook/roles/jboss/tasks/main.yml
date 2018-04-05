@@ -85,7 +85,7 @@
 
 - name: add jboss users
   become: yes
-  become_method: su
+  become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   command: "{{ item }}"
   with_items:
