@@ -15,15 +15,14 @@ echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
 echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
 echo "$WEBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
 
+# moved to playbook
 # adding second VM ssh pubkeys to solve unattended ssh
-if [ -z `ssh-keygen -F $DBIP` ]; then
-  ssh-keyscan -H $DBIP >> ~/.ssh/known_hosts
-fi
+#if [ -e ~/.ssh/known_hosts ]; then
+#	if [ -z `ssh-keygen -F $DBIP` ]; then
+#  		ssh-keyscan -H $DBIP >> ~/.ssh/known_hosts
+#  	fi
+#fi
 
-# to be uncommented after tests
-#sudo apt-get install git
-#git clone -b dev https://github.com/babinkos/TestTask.git
-#cd /TestTask/jboss-guestbook
 mkdir TestTask
 cd TestTask
 git init
@@ -31,6 +30,5 @@ git remote add -f origin https://github.com/babinkos/TestTask.git
 git config core.sparseCheckout true
 echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin dev
-#git checkout dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask 
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml
