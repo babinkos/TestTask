@@ -73,6 +73,8 @@
   become: yes
   user:
     name: "{{ jboss_svc_username }}"
+    shell: "/bin/bash"
+    home: "{{ jboss_rootdir }}"
     
 - name: set owner for jboss folder
   become: yes
