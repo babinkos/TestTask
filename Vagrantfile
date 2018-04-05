@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# old box name was "ubuntu/xenial64"
+boxname = "bento/ubuntu-16.04"
 Vagrant.require_version ">= 2.0.0"
 Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
@@ -8,7 +10,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "jbossapp" do |jbossapp|
     jbossapp.vm.hostname = "jboss-app"
-    jbossapp.vm.box = "ubuntu/xenial64"
+    jbossapp.vm.box = boxname
     jbossapp.vm.network :private_network, ip: "192.168.56.102"
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     jbossapp.vm.provision "copy ssh public key", type: "shell",
@@ -29,7 +31,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "ansiblesrv", primary: true do |ansiblesrv|
 		ansiblesrv.vm.hostname = "ansible-server"
-		ansiblesrv.vm.box = "ubuntu/xenial64"
+		ansiblesrv.vm.box = boxname
 		ansiblesrv.vm.network :private_network, ip: "192.168.56.101"
     ansiblesrv.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     # remove this line below after testing and uncomment /roles/jboss/main.yml unzip module original source
