@@ -1,20 +1,19 @@
-- name: Write node host key to known hosts
-  connection: local
-  shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
+- hosts: 127.0.0.1
+  tasks:
+  - name: Write node host key to known hosts
+    connection: local
+    command: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
       
-- name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
-#  hosts: all
+- hosts: all
+  name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
   vars_files:
-    - group_vars/all/params.json
+      - group_vars/all/params.json
 
-- name: configure and deploy the webservers and application code
-  hosts: web-servers
-# not sure
-# remote_user: root
-
+- hosts: web-servers
+  name: configure and deploy the webservers and application code
   roles:
-    - jboss
-#    - guestbookapp
+      - jboss
+#     - guestbookapp
 
 #- name: deploy MySQL and configure the databases
 #  hosts: db-servers
