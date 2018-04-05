@@ -2,10 +2,10 @@
   tasks:
   - name: Write node host key to known hosts
     connection: local
-    command: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
+    command: "ssh-keyscan -H {{ hostvars[inventory_hostname]['groups']['all'] }} >> ~/.ssh/known_hosts"
 
   - debug:
-      msg: "ssh-keyscan -H {{ inventory_hostname }}"
+      msg: "ssh-keyscan -H {{ hostvars[inventory_hostname]['groups']['all'] }}"
       
 - hosts: all
   name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
