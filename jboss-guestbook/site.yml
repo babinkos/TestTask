@@ -3,6 +3,8 @@
   - name: Write node host key to known hosts
     connection: local
     command: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
+- debug:
+    msg: "ssh-keyscan -H {{ inventory_hostname }}"
       
 - hosts: all
   name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
