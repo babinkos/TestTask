@@ -3,7 +3,8 @@
   - name: Write node host key to known hosts
     connection: local
     command: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
-- debug:
+
+  debug:
     msg: "ssh-keyscan -H {{ inventory_hostname }}"
       
 - hosts: all
