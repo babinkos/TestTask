@@ -9,7 +9,7 @@
     name: "{{ item }}"
     state: latest
   with_items:
-    - 'openjdk-8-jdk'
+    - 'default-jdk'
     - 'unzip'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
@@ -51,7 +51,8 @@
 - name: Download app zip and Unarchive
   become: yes
   unarchive:
-    src: "{{ jboss_repo }}"
+    src: "/tmp/jboss-as-7.1.1.Final.zip"
+#    src: "{{ jboss_repo }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
     remote_src: yes
@@ -69,12 +70,21 @@
 - debug:
     msg: "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
  
+- name: Ensure group for jboss service exists
+  become: yes
+  group:
+    name: "{{ jboss_svc_username }}"
+    state: present
+
 - name: add OS user for jboss service
   become: yes
   user:
     name: "{{ jboss_svc_username }}"
     shell: "/bin/bash"
+# after tests replace with /sbin/nologin    
     home: "{{ jboss_rootdir }}"
+    groups: "{{ jboss_svc_username }}"
+    
     
 - name: set owner for jboss folder
   become: yes
@@ -91,10 +101,8 @@
   become_user: "{{ jboss_svc_username }}"
   command: "{{ item }}"
   with_items:
-    - "cd {{ jboss_bindir }}"
-    - "ls -l"
-    - "./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" 
-    - "./add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}"
+    - "{{ jboss_bindir }}/add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}" 
+    - "{{ jboss_bindir }}/add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}"
 
 - debug:
     msg: "command from previous task: ./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"   

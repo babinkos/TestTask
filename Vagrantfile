@@ -32,6 +32,8 @@ Vagrant.configure("2") do |config|
 		ansiblesrv.vm.box = "ubuntu/xenial64"
 		ansiblesrv.vm.network :private_network, ip: "192.168.56.101"
     ansiblesrv.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
+    # remove this line below after testing and uncomment /roles/jboss/main.yml unzip module original source
+    ansiblesrv.vm.provision "file", source: "jboss-as-7.1.1.Final.zip", destination: "/tmp/jboss-as-7.1.1.Final.zip"
     ansiblesrv.vm.provision "copy ssh public key", type: "shell",
         inline: "echo \"#{id_rsa_pub}\" >> /home/vagrant/.ssh/authorized_keys"
 
