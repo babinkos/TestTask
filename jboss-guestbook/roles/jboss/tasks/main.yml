@@ -51,12 +51,14 @@
 - name: Download app zip and Unarchive
   become: yes
   unarchive:
-    src: "/tmp/jboss-as-7.1.1.Final.zip"
+# TODO : test and if successful - move to ancestor wildfly12 = http://download.jboss.org/wildfly/12.0.0.Final/wildfly-12.0.0.Final.zip  
+# old (jboss7) url for history - http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip
+#    src: "/tmp/jboss-as-7.1.1.Final.zip"
 # uncomment src and remote_src after tests
-#    src: "{{ jboss_repo }}"
+    src: "{{ jboss_repo }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
-#    remote_src: yes
+    remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
 - debug:
@@ -97,12 +99,12 @@
 #    mode: 754
 
 # issue with jboss jar workaround (see https://stackoverflow.com/questions/48403832/javax-xml-parsers-factoryconfigurationerror-running-jboss-as-7-1-with-java-7-upd)
-- name: hotfix for jboss-modules.jar
-  get_url:
+#- name: hotfix for jboss-modules.jar
+#  get_url:
 # uncomment after tests
 #    url: "{{ jboss_hotfix }}"
-    url: file:///tmp/jboss-modules-1.1.5.GA.jar
-    dest: " {{ jboss_rootdir }}/jboss-modules.jar"
+#    url: file:///tmp/jboss-modules-1.1.5.GA.jar
+#    dest: " {{ jboss_rootdir }}/jboss-modules.jar"
 
 - name: add jboss users
   become: yes
