@@ -13,6 +13,11 @@
   name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
   vars_files:
       - group_vars/all/params.json
+  - name: Set authorized key took from file
+    authorized_key:
+      user: charlie
+      state: present
+      key: "{{ lookup('file', '/home/charlie/.ssh/id_rsa.pub') }}"
 
 - hosts: web-servers
   name: configure and deploy the webservers and application code
