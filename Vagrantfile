@@ -1,8 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# old box name was "ubuntu/xenial64"
-boxname = "bento/ubuntu-16.04"
+# old box name was "ubuntu/xenial64" and new bento/ubuntu-16.04 but very slow from vagrantcloud, reverted
+boxname = "ubuntu/xenial64"
 Vagrant.require_version ">= 2.0.0"
 Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
