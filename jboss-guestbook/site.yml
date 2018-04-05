@@ -6,6 +6,9 @@
 
   - debug:
       msg: "ssh-keyscan -H {{ hostvars[inventory_hostname]['groups']['all'] }}"
+
+  - fail:
+    msg: debugging
       
 - hosts: all
   name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
