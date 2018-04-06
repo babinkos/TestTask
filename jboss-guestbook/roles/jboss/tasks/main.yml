@@ -116,4 +116,36 @@
     - "{{ jboss_bindir }}/add-user.sh -a {{ jboss_app_username }} {{ jboss_app_pass }}"
 
 - debug:
-    msg: "command from previous task: ./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"   
+    msg: "command from previous task: ./add-user.sh {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"
+
+- name: create wildfly config file
+  template:
+    src: wildfly.conf.j2
+    dest: /etc/default/wildfly.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+    notify:
+      - reload systemctl    
+
+- name: create wildfly service file
+  template:
+    src: wildfly.service.j2
+    dest: /etc/systemd/system/wildfly.service
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes        
+
+- name: create wildfly startup stript
+  template:
+    src: launch.sh.j2
+    dest: "{{ jboss_bindir }}/launch.sh"
+    owner: "{{ jboss_svc_username }}"
+    group: "{{ jboss_svc_username }}"
+    mode: '0755'
+    backup: yes   
+    
+- name: Make sure wildfly service is running
+  systemd: state=started name=wildfly.service  enabled=yes       
