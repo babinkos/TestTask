@@ -53,12 +53,12 @@
   unarchive:
 # TODO : test and if successful - move to ancestor wildfly12 = http://download.jboss.org/wildfly/12.0.0.Final/wildfly-12.0.0.Final.zip  
 # old (jboss7) url for history - http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip
-#    src: "/tmp/jboss-as-7.1.1.Final.zip"
+    src: "/tmp/jboss-as-7.1.1.Final.zip"
 # uncomment src and remote_src after tests
-    src: "{{ jboss_repo }}"
+#    src: "{{ jboss_repo }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
-    remote_src: yes
+#    remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
 - debug:

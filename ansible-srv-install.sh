@@ -1,6 +1,8 @@
 #!/bin/bash
 DBIP="192.168.56.102"
 WEBIP=$DBIP
+chown vagrant /home/vagrant/.ssh/id_rsa
+chmod 400 /home/vagrant/.ssh/id_rsa
 sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -14,14 +16,6 @@ echo "[db-servers]" | sudo tee /etc/ansible/hosts
 echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
 echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
 echo "$WEBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
-
-# moved to playbook
-# adding second VM ssh pubkeys to solve unattended ssh
-#if [ -e ~/.ssh/known_hosts ]; then
-#	if [ -z `ssh-keygen -F $DBIP` ]; then
-#  		ssh-keyscan -H $DBIP >> ~/.ssh/known_hosts
-#  	fi
-#fi
 
 mkdir TestTask
 cd TestTask

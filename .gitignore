@@ -3,6 +3,7 @@
 **/ansible-examples
 **/.project
 **/*console.log
-**/guestbookapp.xml
+**/guestbookapp.*
 **/jboss-as-7.1.1.Final.zip
 **/jboss-modules-1.1.5.GA.jar
+**/wildfly-12.0.0.Final.zip
