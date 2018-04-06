@@ -1,12 +1,12 @@
-- hosts: 127.0.0.1
-  tasks:
-  - name: Write nodes host pubkeys to local known hosts
-    connection: local
-    command: "ssh-keyscan -H {{ item }} >> /home/vagrant/.ssh/known_hosts"
-    with_items: "{{ hostvars[inventory_hostname]['groups']['all'] }}"
-
-  - debug:
-      msg: "ssh-keyscan -H {{ hostvars[inventory_hostname]['groups']['all'] }}"
+#- hosts: 127.0.0.1
+#  tasks:
+#  - name: Write nodes host pubkeys to local known hosts
+#    connection: local
+#    command: "ssh-keyscan -H {{ item }} >> /home/vagrant/.ssh/known_hosts"
+#    with_items: "{{ hostvars[inventory_hostname]['groups']['all'] }}"
+# moved to provisioning script
+#  - debug:
+#      msg: "ssh-keyscan -H {{ hostvars[inventory_hostname]['groups']['all'] }}"
 
       
 - hosts: all
