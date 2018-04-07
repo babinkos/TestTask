@@ -29,5 +29,6 @@ git config core.sparseCheckout true
 echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask
+ssh -qv -o BatchMode=yes -o StrictHostKeyChecking=no -o HostKeyAlgorithms=ssh-rsa -o ConnectTimeout=10 vagrant@192.168.56.102 "ip addr;exit"
 ansible all -m ping -v
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml -v

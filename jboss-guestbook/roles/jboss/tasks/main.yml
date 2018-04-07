@@ -128,7 +128,7 @@
     group: root
     mode: '0644'
     backup: yes
-    notify:
+  notify:
       - reload systemctl    
 
 - name: create wildfly service file
@@ -143,6 +143,9 @@
     backup: yes        
 
 - name: create wildfly startup stript
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
   template:
     src: launch.sh.j2
     dest: "{{ jboss_bindir }}/launch.sh"
@@ -152,4 +155,6 @@
     backup: yes   
     
 - name: Make sure wildfly service is running
+  become: yes
+  become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes       
