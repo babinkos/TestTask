@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     jbossapp.vm.box = boxname
     jbossapp.vm.network :private_network, ip: "192.168.56.102"
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
-    jbossapp.vm.provision "shell", path: "jboss-app-install.sh"
+    jbossapp.vm.provision "shell", path: "jboss-app-install.sh", privileged: false
     # if in the future we'll want to refactor to provision at once this is the hint: 
     #jbossapp.vm.provision "ansible" do |ansible|
     #  ansible.verbose = "v"
@@ -27,6 +27,7 @@ Vagrant.configure("2") do |config|
 		ansiblesrv.vm.box = boxname
 		ansiblesrv.vm.network :private_network, ip: "192.168.56.101"
     ansiblesrv.vm.network "forwarded_port", guest: 8080, host: 8080, autocorrect: true
+    ansiblesrv.vm.network "forwarded_port", guest: 8443, host: 8443, autocorrect: true
     ansiblesrv.vm.network "forwarded_port", guest: 9990, host: 9990, autocorrect: true
     ansiblesrv.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     
@@ -35,6 +36,6 @@ Vagrant.configure("2") do |config|
     #ansiblesrv.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
     ansiblesrv.vm.provision "file", source: "wildfly-12.0.0.Final.zip", destination: "/tmp/wildfly-12.0.0.Final.zip"
     
-    ansiblesrv.vm.provision "shell", path: "ansible-srv-install.sh"
+    ansiblesrv.vm.provision "shell", path: "ansible-srv-install.sh", privileged: false
   end  
 end
