@@ -14,6 +14,9 @@ Vagrant.configure("2") do |config|
     jbossapp.vm.hostname = "jboss-app"
     jbossapp.vm.box = boxname
     jbossapp.vm.network :private_network, ip: "192.168.56.102"
+    jbossapp.vm.network "forwarded_port", guest: 8080, host: 8080, autocorrect: true
+    jbossapp.vm.network "forwarded_port", guest: 8443, host: 8443, autocorrect: true
+    jbossapp.vm.network "forwarded_port", guest: 9990, host: 9990, autocorrect: true
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     jbossapp.vm.provision "shell", path: "jboss-app-install.sh", privileged: false
     # if in the future we'll want to refactor to provision at once this is the hint: 
@@ -26,9 +29,6 @@ Vagrant.configure("2") do |config|
 		ansiblesrv.vm.hostname = "ansible-server"
 		ansiblesrv.vm.box = boxname
 		ansiblesrv.vm.network :private_network, ip: "192.168.56.101"
-    ansiblesrv.vm.network "forwarded_port", guest: 8080, host: 8080, autocorrect: true
-    ansiblesrv.vm.network "forwarded_port", guest: 8443, host: 8443, autocorrect: true
-    ansiblesrv.vm.network "forwarded_port", guest: 9990, host: 9990, autocorrect: true
     ansiblesrv.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     
     # remove this line below after testing and uncomment /roles/jboss/main.yml unarchieve module original source
