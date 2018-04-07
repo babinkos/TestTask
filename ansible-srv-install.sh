@@ -20,7 +20,7 @@ echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
 echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
 echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
 echo "$WEBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
-
+echo "AuthorizedKeysFile %h/.ssh/authorized_keys" | sudo tee --append /etc/ssh/sshd_config
 mkdir TestTask
 cd TestTask
 git init

@@ -7,4 +7,5 @@ sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get -y install python-minimal
+echo "AuthorizedKeysFile %h/.ssh/authorized_keys" | sudo tee --append /etc/ssh/sshd_config
 #sudo apt-get -y install python-simplejson
