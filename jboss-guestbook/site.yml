@@ -22,6 +22,8 @@
     - group_vars/db-servers/main.yml
   roles:
     - { role: geerlingguy.mysql }
+    - mysql-gb-db
+
 #- hosts: web-servers
 #  name: configure and deploy the webservers and application code
 #  roles:

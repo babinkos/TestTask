@@ -1,10 +1,12 @@
 ---
 # tasks file for mysql-gb-db
-- name: using geerlingguy.mysql
-  hosts: db-servers
-  become: yes
-  vars_files:
-    - vars/main.yml
-    - vars/spoilers.yml
-  roles:
-    - { role: geerlingguy.mysql }
+- debug: db name
+  msg: "{{ mysql_databases[name] }}"
+  
+- name: Restore database
+  mysql_db:
+    name: "{{ mysql_databases[name] }}"
+    login_user: "{{ mysql_users[name] }}"
+    login_password: "{{ mysql_users[pasword] }}"
+    state: import
+    target: "{{ gb_dirname + '/' gb_dbdump }}"

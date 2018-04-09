@@ -11,6 +11,7 @@
 	"jboss_jarfile": "jboss-modules.jar",
 	"gb_configfile": "guestbookapp/guestbookapp.xml",
 	"gb_warfile": "guestbookapp/guestbookapp.war",
+	"gb_dbdump": "guestbookapp/guestbookmysqldump.sql",
 	"jboss_svc_username": "jboss-svc",
 	"jboss_mgmt_username": "jboss-mgmt",
 	"jboss_mgmt_pass": "somepass",
