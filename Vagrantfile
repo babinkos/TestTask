@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
     #ansiblesrv.vm.provision "file", source: "jboss-as-7.1.1.Final.zip", destination: "/tmp/jboss-as-7.1.1.Final.zip"
     #ansiblesrv.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
     ansiblesrv.vm.provision "file", source: "wildfly-12.0.0.Final.zip", destination: "/tmp/wildfly-12.0.0.Final.zip"
+    ansiblesrv.vm.provision "file", source: "guestbookapp.zip", destination: "/tmp/guestbookapp.zip"
     
     ansiblesrv.vm.provision "shell", path: "ansible-srv-install.sh", privileged: false
   end  
