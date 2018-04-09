@@ -1,5 +1,5 @@
 ---
-# tasks file for jboss
+# tasks file for jboss/wildfly
 - debug:
     msg: "System {{ inventory_hostname }} has OS type: {{ ansible_distribution }}"
 
@@ -157,4 +157,24 @@
 - name: Make sure wildfly service is running
   become: yes
   become_method: sudo
-  systemd: state=started name=wildfly.service  enabled=yes       
+  systemd: state=started name=wildfly.service  enabled=yes
+
+- name: Check wildfly web-service is running or not vs HTTPS 
+  uri:
+    url: https://localhost:8443
+    return_content: yes
+  register: httpspwebpage
+
+- name: Fail if jboss.org is not in the page content
+  fail:
+  when: "'.jboss.org' not in httpswebpage.content"
+
+- name: Check wildfly web-service is running or not vs HTTP 
+  uri:
+    url: http://localhost:8080
+    return_content: yes
+  register: httpwebpage
+
+- name: Fail if jboss.org is not in the page content
+  fail:
+  when: "'.jboss.org' not in httpwebpage.content"          

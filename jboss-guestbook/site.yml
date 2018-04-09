@@ -18,7 +18,7 @@
   name: configure and deploy the webservers and application code
   roles:
       - jboss
-#     - guestbookapp
+      - guestbookapp
 
 #- name: deploy MySQL and configure the databases
 #  hosts: db-servers

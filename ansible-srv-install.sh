@@ -15,7 +15,7 @@ sudo apt-get update
 sudo apt-get install ansible -y
 ansible-galaxy install geerlingguy.mysql
 echo "[all:vars]" | sudo tee /etc/ansible/hosts
-echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
+echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
 echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
 echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
 echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
