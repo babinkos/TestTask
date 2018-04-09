@@ -1,2 +1,9 @@
 ---
 # tasks file for mysql-gb-db
+- name: using geerlingguy.mysql
+  become: yes
+  vars_files:
+    - vars/main.yml
+    - vars/spoilers.yml
+  roles:
+    - { role: geerlingguy.mysql }
