@@ -168,7 +168,7 @@
 
 - name: Fail if jboss.org is not in the page content
   fail:
-  when: "'.jboss.org' not in httpswebpage.content"
+  when: "'JBoss' not in httpswebpage.content"
 
 - name: Check wildfly web-service is running or not vs HTTP 
   uri:
@@ -178,4 +178,4 @@
 
 - name: Fail if jboss.org is not in the page content
   fail:
-  when: "'.jboss.org' not in httpwebpage.content"          
+  when: "'JBoss' not in httpwebpage.content"          
