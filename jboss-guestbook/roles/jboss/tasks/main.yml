@@ -164,7 +164,7 @@
     url: https://localhost:8443
     validate_certs: False
     return_content: yes
-  register: httpspwebpage
+  register: httpswebpage
 
 - name: Fail if jboss.org is not in the page content
   fail:
