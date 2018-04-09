@@ -162,6 +162,7 @@
 - name: Check wildfly web-service is running or not vs HTTPS 
   uri:
     url: https://localhost:8443
+    validate_certs: False
     return_content: yes
   register: httpspwebpage
 

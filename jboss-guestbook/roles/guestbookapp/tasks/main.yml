@@ -64,6 +64,7 @@
 #  uri:
 #    url: https://localhost:8443
 #    return_content: yes
+#    validate_certs: False
 #  register: httpspwebpage
 #
 #- name: Fail if jboss.org is not in the page content
