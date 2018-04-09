@@ -1,7 +1,13 @@
 ---
 # tasks file for mysql-gb-db
 - debug:
-    msg: "{{ mysql_databases[name] }}"
+    msg: "{{ hostvars }}"
+
+- debug:
+    msg: "{{ hostvars[inventory_hostname]['groups']['all'] }}"
+
+- debug:
+    msg: "{{ mysql_databases }}"
   
 - name: Restore database
   mysql_db:
