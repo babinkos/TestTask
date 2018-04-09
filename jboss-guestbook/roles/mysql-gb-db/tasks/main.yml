@@ -1,18 +1,12 @@
 ---
 # tasks file for mysql-gb-db
 - debug:
-    msg: "{{ hostvars }}"
-
-- debug:
-    msg: "{{ hostvars[inventory_hostname]['groups']['all'] }}"
-
-- debug:
-    msg: "{{ mysql_databases }}"
+    msg: "{{ mysql_databases[0]['name'] }}"
   
 - name: Restore database
   mysql_db:
-    name: "{{ mysql_databases[name] }}"
-    login_user: "{{ mysql_users[name] }}"
-    login_password: "{{ mysql_users[pasword] }}"
+    name: "{{ mysql_databases[0]['name'] }}"
+    login_user: "{{ mysql_users[0]['name'] }}"
+    login_password: "{{ mysql_users[0]['pasword'] }}"
     state: import
     target: "{{ gb_dirname + '/' gb_dbdump }}"
