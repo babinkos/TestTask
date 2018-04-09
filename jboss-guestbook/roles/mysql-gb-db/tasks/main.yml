@@ -9,6 +9,9 @@
     path: "{{ gb_dirname + '/' + gb_dbdump }}"
   register: dumpfilestate
 
+- debug:
+    msg: "filepath {{ gb_dirname + '/' + gb_dbdump }} state exists {{ dumpfilestate.stat.exists }}"
+
 - name: Restore database
   mysql_db:
     name: "{{ mysql_databases[0]['name'] }}"
@@ -16,4 +19,4 @@
     login_password: "{{ mysql_users[0]['password'] }}"
     state: import
     target: "{{ gb_dirname + '/' + gb_dbdump }}"
-  when: dumpfilestate.stat.exist == True
+  when: dumpfilestate.stat.exists == True
