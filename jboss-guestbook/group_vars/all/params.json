@@ -7,7 +7,7 @@
 	"jboss_unzip_dirname": "/usr/local/share/wildfly",
 	"jboss_rootdir": "{{ jboss_unzip_dirname }}/wildfly-12.0.0.Final",
 	"jboss_bindir": "{{ jboss_rootdir }}/bin",
-	"gb_dirname": "{{ jboss_rootdir }}/standalone/deployments/",
+	"gb_dirname": "{{ jboss_rootdir }}/standalone/deployments",
 	"jboss_jarfile": "jboss-modules.jar",
 	"gb_configfile": "guestbookapp.xml",
 	"gb_warfile": "guestbookapp.war",
