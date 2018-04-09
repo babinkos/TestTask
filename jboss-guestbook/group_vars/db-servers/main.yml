@@ -1,0 +1,12 @@
+---
+# vars file
+mysql_root_password: super-secure-password
+mysql_databases:
+  - name: guestbook
+    encoding: latin1
+    collation: latin1_general_ci
+mysql_users:
+  - name: demo
+    host: "%"
+    password: demodemo
+    priv: "guestbook_db.*:ALL"
