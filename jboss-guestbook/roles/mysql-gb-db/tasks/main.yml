@@ -1,7 +1,7 @@
 ---
 # tasks file for mysql-gb-db
-- debug: db name
-  msg: "{{ mysql_databases[name] }}"
+- debug:
+    msg: "{{ mysql_databases[name] }}"
   
 - name: Restore database
   mysql_db:
