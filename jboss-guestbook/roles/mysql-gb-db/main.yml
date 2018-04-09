@@ -1,5 +1,5 @@
 
-- hosts: db-servers
+- name: using geerlingguy.mysql
   become: yes
   vars_files:
     - vars/main.yml
