@@ -1,12 +1,19 @@
 ---
 # tasks file for mysql-gb-db
 - debug:
-    msg: "{{ mysql_databases[0]['name'] }}"
+    msg: "{{ mysql_databases[0]['name'] }} ; {{ gb_dirname + '/' + gb_dbdump }}"
   
+- name: Check that the db dump file exists
+  become: yes
+  stat:
+    path: "{{ gb_dirname + '/' + gb_dbdump }}"
+  register: dumpfilestate
+
 - name: Restore database
   mysql_db:
     name: "{{ mysql_databases[0]['name'] }}"
     login_user: "{{ mysql_users[0]['name'] }}"
-    login_password: "{{ mysql_users[0]['pasword'] }}"
+    login_password: "{{ mysql_users[0]['password'] }}"
     state: import
-    target: "{{ gb_dirname + '/' gb_dbdump }}"
+    target: "{{ gb_dirname + '/' + gb_dbdump }}"
+  when: dumpfilestate.stat.exist == True
