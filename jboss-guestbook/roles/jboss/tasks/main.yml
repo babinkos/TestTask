@@ -11,6 +11,7 @@
   with_items:
     - 'default-jdk'
     - 'unzip'
+    - 'python-lxml'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Check that the jboss directory already exists

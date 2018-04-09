@@ -14,15 +14,15 @@
   vars_files:
       - group_vars/all/params.json
 
-- hosts: web-servers
-  name: configure and deploy the webservers and application code
+- name: deploy MySQL and configure the databases
+  hosts: db-servers
+  #remote_user: root
   roles:
-      - jboss
-      - guestbookapp
+    - mysql-gb-db       
 
-#- name: deploy MySQL and configure the databases
-#  hosts: db-servers
-# remote_user: root
-
+#- hosts: web-servers
+#  name: configure and deploy the webservers and application code
 #  roles:
-#    - mysql-gb-db       
+#      - jboss
+#      - guestbookapp
+
