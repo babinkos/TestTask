@@ -1,6 +1,7 @@
 ---
 # tasks file for mysql-gb-db
 - name: using geerlingguy.mysql
+  hosts: db-servers
   become: yes
   vars_files:
     - vars/main.yml

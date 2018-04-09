@@ -17,9 +17,11 @@
 - name: deploy MySQL and configure the databases
   hosts: db-servers
   #remote_user: root
+  become: yes
+  vars_files:
+    - group_vars/db-servers/main.yml
   roles:
-    - mysql-gb-db       
-
+    - { role: geerlingguy.mysql }
 #- hosts: web-servers
 #  name: configure and deploy the webservers and application code
 #  roles:
