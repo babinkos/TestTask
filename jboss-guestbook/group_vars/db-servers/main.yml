@@ -1,5 +1,6 @@
 ---
 # vars file
+mysql_bind_address: "{{ hostvars[inventory_hostname]['groups']['db-servers'][0] }}"
 mysql_root_password: super-secure-password
 mysql_databases:
   - name: guestbook
