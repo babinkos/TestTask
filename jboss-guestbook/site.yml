@@ -35,8 +35,8 @@
     - { role: geerlingguy.mysql }
     - mysql-gb-db
 
-#- hosts: web-servers
-#  name: configure and deploy the application code
-#  roles:
-#      - guestbookapp
+- hosts: web-servers
+  name: configure and deploy the application code
+  roles:
+      - guestbookapp
 
