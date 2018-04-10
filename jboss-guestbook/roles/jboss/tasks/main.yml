@@ -160,10 +160,9 @@
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
 
-- name: Wait 2 seconds for port 8080 to become open and contain "HTTP"
+- name: Wait 2 seconds for port 8080 to become open
   wait_for:
     port: 8080
-    search_regex: HTTP
     delay: 2
     timeout: 60
 
