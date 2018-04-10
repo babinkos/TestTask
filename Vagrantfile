@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
     jbossapp.vm.network "forwarded_port", guest: 9990, host: 9990, autocorrect: true
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     jbossapp.vm.provision "shell", path: "jboss-app-install.sh", privileged: false
-    ansiblesrv.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
+    jbossapp.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
     # if in the future we'll want to refactor to provision at once this is the hint: 
     #jbossapp.vm.provision "ansible" do |ansible|
     #  ansible.verbose = "v"
