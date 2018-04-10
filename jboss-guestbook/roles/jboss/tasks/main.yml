@@ -97,13 +97,10 @@
     recurse: yes
     owner: "{{ jboss_svc_username }}"
     group: "{{ jboss_svc_username }}"
-    mode: u=rw,g=r,o=r
+    mode: 0755
 
 # issue with jboss jar workaround (see https://stackoverflow.com/questions/48403832/javax-xml-parsers-factoryconfigurationerror-running-jboss-as-7-1-with-java-7-upd)
 - name: hotfix for jboss-modules.jar
-  become: yes
-  become_method: sudo
-  become_user: "{{ jboss_svc_username }}"
   get_url:
 # uncomment after tests
 #    url: "{{ jboss_hotfix }}"
