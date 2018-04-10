@@ -101,11 +101,16 @@
 
 # issue with jboss jar workaround (see https://stackoverflow.com/questions/48403832/javax-xml-parsers-factoryconfigurationerror-running-jboss-as-7-1-with-java-7-upd)
 - name: hotfix for jboss-modules.jar
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
   get_url:
 # uncomment after tests
 #    url: "{{ jboss_hotfix }}"
     url: file:///tmp/jboss-modules-1.1.5.GA.jar
-    dest: " {{ jboss_rootdir }}/jboss-modules.jar"
+    dest: "{{ jboss_rootdir }}/jboss-modules.jar"
+    force: yes
+  creates: "{{ jboss_rootdir }}/jboss-modules.jar"
   when: jboss_repo == "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"    
 
 - name: add jboss users
