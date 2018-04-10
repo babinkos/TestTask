@@ -9,6 +9,6 @@ mysql_databases:
 mysql_users:
   - name: demo
 #    host: "%" 
-    host: "{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}"
+    host: "{{ hostvars[inventory_hostname]['groups']['db-servers'][0] }}"
     password: demodemo
     priv: "guestbook.*:ALL"
