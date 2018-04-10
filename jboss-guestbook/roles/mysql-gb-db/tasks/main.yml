@@ -20,10 +20,18 @@
 # uncomment src and remote_src after tests
 #    src: "{{ application_repo }}"
     dest: "{{ gb_dirname }}"
-    creates: "{{ gb_dirname + '/' + gb_configfile }}"
+    creates: "{{ gb_dirname + '/' + gb_dbdump }}"
 #    remote_src: yes
-  when: xmlfilestate.stat.exists == False
+  when: dumpfilestate.stat.exists == False
   
+- name: Check that the db dump file finally exists
+  become: yes
+  stat:
+    path: "{{ gb_dirname + '/' + gb_dbdump }}"
+  register: dumpfilestate
+
+- debug:
+    msg: "filepath {{ gb_dirname + '/' + gb_dbdump }} state exists {{ dumpfilestate.stat.exists }}"
 
 - name: Restore database
   mysql_db:
