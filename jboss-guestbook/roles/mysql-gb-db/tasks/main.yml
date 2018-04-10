@@ -13,6 +13,18 @@
 - debug:
     msg: "filepath {{ gb_dirname + '/' + gb_dbdump }} state exists {{ dumpfilestate.stat.exists }}"
 
+- name: Download app zip and Unarchive if sql dump file is not existing
+  become: yes
+  unarchive:
+    src: "/tmp/{{ app_zipfile }}"
+# uncomment src and remote_src after tests
+#    src: "{{ application_repo }}"
+    dest: "{{ gb_dirname }}"
+    creates: "{{ gb_dirname + '/' + gb_configfile }}"
+#    remote_src: yes
+  when: xmlfilestate.stat.exists == False
+  
+
 - name: Restore database
   mysql_db:
     name: "{{ mysql_databases[0]['name'] }}"

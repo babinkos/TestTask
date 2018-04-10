@@ -84,8 +84,8 @@
   become: yes
   user:
     name: "{{ jboss_svc_username }}"
-    shell: "/bin/bash"
-# after tests replace with /sbin/nologin    
+    shell: "/sbin/nologin"
+# after tests replace /bin/bash with /sbin/nologin    
     home: "{{ jboss_rootdir }}"
     groups: "{{ jboss_svc_username }}"
     
@@ -159,6 +159,13 @@
   become: yes
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
+
+- name: Wait 2 seconds for port 8080 to become open and contain "HTTP"
+  wait_for:
+    port: 8080
+    search_regex: HTTP
+    delay: 2
+    timeout: 60
 
 - name: Check wildfly web-service is running or not vs HTTPS 
   uri:
