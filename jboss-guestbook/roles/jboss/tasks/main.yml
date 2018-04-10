@@ -106,7 +106,7 @@
 #    url: "{{ jboss_hotfix }}"
     url: file:///tmp/jboss-modules-1.1.5.GA.jar
     dest: " {{ jboss_rootdir }}/jboss-modules.jar"
-  when: "{{ jboss_repo }}" == "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"    
+  when: jboss_repo == "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"    
 
 - name: add jboss users
   become: yes
