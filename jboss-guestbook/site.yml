@@ -13,8 +13,13 @@
   name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
   vars_files:
       - group_vars/all/params.json
-- debug:
-  msg: "web-servers hostname from hostvars = {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}"
+
+#- hosts: db-servers
+#  tasks:
+#  - debug: make sure we can access web-server name from hostvars
+#      msg: "web-servers hostname from hostvars = {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}"
+#  - fail:
+
 
 - name: deploy MySQL and configure the databases
   hosts: db-servers
