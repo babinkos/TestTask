@@ -84,7 +84,7 @@
   become: yes
   user:
     name: "{{ jboss_svc_username }}"
-    shell: "/sbin/nologin"
+    shell: "/bin/bash"
 # after tests replace /bin/bash with /sbin/nologin    
     home: "{{ jboss_rootdir }}"
     groups: "{{ jboss_svc_username }}"
