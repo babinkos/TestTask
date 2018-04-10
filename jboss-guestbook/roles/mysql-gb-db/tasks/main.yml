@@ -36,10 +36,10 @@
 - name: Restore database
   mysql_db:
     name: "{{ mysql_databases[0]['name'] }}"
-#    login_user: "{{ mysql_users[0]['name'] }}"
-#    login_password: "{{ mysql_users[0]['password'] }}"
-    login_user: "root"
-    login_password: "{{ mysql_root_password }}"
+    login_user: "{{ mysql_users[0]['name'] }}"
+    login_password: "{{ mysql_users[0]['password'] }}"
+#    login_user: "root"
+#    login_password: "{{ mysql_root_password }}"
     state: import
     target: "{{ gb_dirname + '/' + gb_dbdump }}"
   when: dumpfilestate.stat.exists == True

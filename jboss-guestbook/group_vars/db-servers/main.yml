@@ -10,4 +10,4 @@ mysql_users:
     host: "%" 
 #    host: "{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}"
     password: demodemo
-    priv: "guestbook_db.*:ALL"
+    priv: "guestbook.*:ALL"
