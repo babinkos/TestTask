@@ -120,8 +120,10 @@
   command: "fgrep -c {{ jboss_mgmt_username }} {{ jboss_rootdir }}/standalone/configuration/mgmt-users.properties"
   register: mgmt_usr_exist
   ignore_errors: yes
-  failed_when: "mgmt_usr_exist.rc >= 2"
+#  failed_when: "mgmt_usr_exist.rc >= 2"
 # fgrep -c returns count of string (e.g. zero if nothing found, 1 if user exist, 2 and more if something go wrong )   
+- debug:
+    msg: "mgmt_usr_exist='{{ mgmt_usr_exist }}'"
 
 - debug:
     msg: "command for next task: {{ jboss_bindir }}/add-user.sh -s {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"
@@ -131,7 +133,7 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   command: "{{ jboss_bindir }}/add-user.sh -s {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"
-  when: mgmt_usr_exist == 0 
+  when: "mgmt_usr_exist.rc == 1" 
 #    - "{{ jboss_bindir }}/add-user.sh -s -a {{ jboss_app_username }} {{ jboss_app_pass }}"
 
 - debug:
@@ -143,7 +145,7 @@
   command: "fgrep -c {{ jboss_app_username }} {{ jboss_rootdir }}/standalone/configuration/mgmt-users.properties"
   register: app_usr_exist
   ignore_errors: yes
-  failed_when: "app_usr_exist.rc >= 2"
+  failed_when: "app_usr_exist.rc == 1"
 # fgrep -c returns count of string (e.g. zero if nothing found)   
 
 - debug:
@@ -200,6 +202,31 @@
   become: yes
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
+
+#restart webservice
+# /standalone/configuration/standalone.xml 127.0.0.1
+#            <inet-address value="${jboss.bind.address.management:0.0.0.0}"/>
+#            <inet-address value="${jboss.bind.address:0.0.0.0}"/>
+# sed -i 's/original/new/g'
+# put a \ before any of $ * . [ \ ^ to get the literal character
+
+- name: updating default standalone.xml to bind on all interfaces for debugging
+  become: yes
+  notify: restart webservice
+  replace:
+    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
+    regexp: 'jboss\.bind\.address\.management\:127\.0\.0\.0'
+    replace: 'jboss\.bind\.address\.management\:0\.0\.0\.0'
+    backup: yes
+
+- name: updating default standalone.xml to bind on all interfaces for debugging
+  become: yes
+  notify: restart webservice
+  replace:
+    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
+    regexp: 'jboss\.bind\.address\:127\.0\.0\.0'
+    replace: 'jboss\.bind\.address\:0\.0\.0\.0'
+    backup: yes
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:

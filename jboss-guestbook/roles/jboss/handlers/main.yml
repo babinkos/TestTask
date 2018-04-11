@@ -5,3 +5,8 @@
   become: yes
   become_method: sudo
   command: systemctl daemon-reload
+  
+- name: restart webservice
+  become: yes
+  become_method: sudo
+  command: service wildfly restart  
