@@ -206,25 +206,33 @@
 # sed -i 's/original/new/g'
 # put a \ before any of $ * . [ \ ^ to get the literal character
 
-- name: updating default standalone.xml to bind on all interfaces for debugging
+#- name: using old good sed
+#  command: 'sed -i s/jboss\.bind\.address\.management\:127\.0\.0\.0/jboss\.bind\.address\.management\:0\.0\.0\.0/g +{{ jboss_rootdir}}+'/standalone/configuration/standalone.xml'
+#  notify: restart webservice
+
+
+- name: updating default standalone.xml to bind mgmt on all interfaces for debugging
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   notify: restart webservice
   replace:
+    group: "{{ jboss_svc_username }}"
+    owner: "{{ jboss_svc_username }}"
+    mode: 0755
     path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-    regexp: 'jboss\.bind\.address\.management\:127\.0\.0\.0'
-    replace: 'jboss\.bind\.address\.management\:0\.0\.0\.0'
+    regexp: 'management\:127\.0\.0\.0'
+    replace: 'management\:0\.0\.0\.0'
     backup: yes
 
-- name: updating default standalone.xml to bind on all interfaces for debugging
-  become: yes
-  notify: restart webservice
-  replace:
-    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-    regexp: 'jboss\.bind\.address\:127\.0\.0\.0'
-    replace: 'jboss\.bind\.address\:0\.0\.0\.0'
-    backup: yes
+#- name: updating default standalone.xml to bind on all interfaces for debugging
+#  become: yes
+#  notify: restart webservice
+#  replace:
+#    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
+#    regexp: 'jboss\.bind\.address\:127\.0\.0\.0'
+#    replace: 'jboss\.bind\.address\:0\.0\.0\.0'
+#    backup: yes
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
