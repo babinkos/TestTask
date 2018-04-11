@@ -14,8 +14,6 @@
     - 'python-lxml'
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-#http://ftp.osuosl.org/pub/funtoo/distfiles/oracle-java/jdk-7u80-linux-x64.tar.gz
-
 - name: Check that the jboss directory already exists
   become: yes
   stat:
@@ -54,14 +52,12 @@
 - name: Download app zip and Unarchive
   become: yes
   unarchive:
-# test and if successful - move to ancestor wildfly12 = http://download.jboss.org/wildfly/12.0.0.Final/wildfly-12.0.0.Final.zip  
-# old (jboss7) url for history - http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip
-    src: "/tmp/{{ jboss_zipfilename }}"
-# TODO uncomment src and remote_src after tests
-#    src: "{{ jboss_repo }}"
+#    src: "/tmp/{{ jboss_zipfilename }}"
+# comment src and remote_src for tests
+    src: "{{ jboss_repo }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
-#    remote_src: yes
+    remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
 
 - debug:
@@ -87,7 +83,6 @@
   user:
     name: "{{ jboss_svc_username }}"
     shell: "/sbin/nologin"
-# after tests replace /bin/bash with /sbin/nologin    
     home: "{{ jboss_rootdir }}"
     groups: "{{ jboss_svc_username }}"
     
@@ -107,9 +102,9 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   get_url:
-# TODO uncomment remote usl after tests
-    url: "{{ jboss_hotfix }}"
-#    url: file:///tmp/jboss-modules-1.1.5.GA.jar
+# comment remote url for tests
+#    url: "{{ jboss_hotfix }}"
+    url: file:///tmp/jboss-modules-1.1.5.GA.jar
     dest: "{{ jboss_rootdir }}/jboss-modules.jar"
     force: yes
   when: jboss_repo == "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"    
@@ -123,7 +118,7 @@
   register: mgmt_usr_exist
   ignore_errors: yes
 # hint: fgrep -c returns count of string (e.g. zero if nothing found, 1 if user exist, 2 and more if something go wrong )   
-
+# returned value in registered var is 'string', but returncode (.rc) of grep is 1 if not found
 - debug:
     msg: "mgmt_usr_exist='{{ mgmt_usr_exist }}'"
 
@@ -148,7 +143,6 @@
   register: app_usr_exist
   ignore_errors: yes
   failed_when: "app_usr_exist.rc == 1"
-# fgrep -c returns count of string (e.g. zero if nothing found)   
 
 - debug:
     msg: "command for next task: {{ jboss_bindir }}/add-user.sh -s -a {{ jboss_app_username }} {{ jboss_app_pass }}"
@@ -214,6 +208,8 @@
 
 - name: updating default standalone.xml to bind on all interfaces for debugging
   become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
   notify: restart webservice
   replace:
     path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
