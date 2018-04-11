@@ -16,6 +16,8 @@
 
 - name: Download app zip and Unarchive
   become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
   unarchive:
     src: "/tmp/{{ app_zipfile }}"
 # uncomment src and remote_src after tests
