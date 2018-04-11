@@ -14,12 +14,6 @@
   vars_files:
       - group_vars/all/params.json
 
-#- hosts: db-servers
-#  tasks:
-#  - debug: make sure we can access web-server name from hostvars
-#      msg: "web-servers hostname from hostvars = {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}"
-#  - fail:
-
 - hosts: web-servers
   name: configure and deploy the webserver (jboss/wildfly)
   roles:
@@ -27,7 +21,6 @@
 
 - name: deploy MySQL and configure the databases
   hosts: db-servers
-  #remote_user: root
   become: yes
   vars_files:
     - group_vars/db-servers/main.yml
