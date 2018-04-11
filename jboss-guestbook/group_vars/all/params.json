@@ -1,7 +1,7 @@
 {
 	"application_repo": "https://web.archive.org/web/20160429180656/http://www.cumulogic.com/download/Apps/guestbookapp.zip",
-	"app_zipfile": "{{ application_repo }}.split('//')[-1].split('/')[-1]",
-	"app_name": "{{ application_repo }}.split('//')[-1].split('/')[-1].split('.')[0]",
+	"app_zipfile": "{{ application_repo.split('//')[-1].split('/')[-1] }}",
+	"app_name": "{{ application_repo.split('//')[-1].split('/')[-1].split('.')[0] }}",
 	"jboss_hotfix": "http://repo1.maven.org/maven2/org/jboss/modules/jboss-modules/1.1.5.GA/jboss-modules-1.1.5.GA.jar",
 	"jboss_repo": "http://download.jboss.org/wildfly/12.0.0.Final/wildfly-12.0.0.Final.zip",
 	"jboss_zipfilename": "{{ jboss_repo.split('//')[-1].split('/')[-1] }}",
