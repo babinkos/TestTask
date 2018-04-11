@@ -6,7 +6,7 @@
 	"jboss_repo": "http://download.jboss.org/wildfly/12.0.0.Final/wildfly-12.0.0.Final.zip",
 	"jboss_zipfilename": "{{ jboss_repo.split('//')[-1].split('/')[-1] }}",
 	"jboss_unzip_dirname": "/usr/local/share/{{ jboss_repo.split('//')[-1].split('/')[1] }}",
-	"jboss_rootdir": "{{ jboss_unzip_dirname }}/{{ jboss_zipfilename }}",
+	"jboss_rootdir": "{{ jboss_unzip_dirname }}/{{ jboss_zipfilename.split('.zip')[0] }}",
 	"jboss_bindir": "{{ jboss_rootdir }}/bin",
 	"gb_dirname": "{{ jboss_rootdir }}/standalone/deployments",
 	"jboss_jarfile": "jboss-modules.jar",

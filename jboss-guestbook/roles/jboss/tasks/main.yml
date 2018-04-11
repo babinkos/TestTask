@@ -129,7 +129,7 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   command: "{{ jboss_bindir }}/add-user.sh -s {{ jboss_mgmt_username }} {{ jboss_mgmt_pass }}"
-  when: mgmt_usr_exist = 0 
+  when: mgmt_usr_exist == 0 
 #    - "{{ jboss_bindir }}/add-user.sh -s -a {{ jboss_app_username }} {{ jboss_app_pass }}"
 
 - debug:
@@ -149,7 +149,7 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   command: "{{ jboss_bindir }}/add-user.sh -s -a {{ jboss_app_username }} {{ jboss_app_pass }}"
-  when: app_usr_exist = 0 
+  when: app_usr_exist == 0 
 
 
 #fgrep jbossmgmt /usr/local/share/wildfly/jboss-as-7.1.1.Final/standalone/configuration/mgmt-users.properties
