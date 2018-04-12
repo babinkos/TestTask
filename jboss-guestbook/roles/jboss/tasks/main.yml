@@ -226,7 +226,7 @@
 #    backup: yes
 
 - name: check if jboss/wildfly mgmt interface is on loopback address
-  command: 'netstat -na | fgrep -c "127.0.0.1:9990"'
+  shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
   register: mgmt_bind_loopback
   ignore_errors: yes
 
@@ -241,7 +241,7 @@
 # original value="${jboss.bind.address.management:127.0.0.1}"
     value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
   when: mgmt_bind_loopback == 1 
-# no need tto change binding for public interface because it done in wildfly.conf to all interfaces
+# no need to change binding for public interface because it done in wildfly.conf to all interfaces
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
