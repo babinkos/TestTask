@@ -48,8 +48,14 @@
 
 - debug:
     msg: "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
+
+- name: Check that the jboss source zip in tmp exists or not
+  become: yes
+  stat:
+    path: "/tmp/{{ jboss_zipfilename }}"
+  register: local_jboss_zipfile
   
-- name: Download app zip and Unarchive
+- name: Download JBOSS zip and Unarchive
   become: yes
   unarchive:
 #    src: "/tmp/{{ jboss_zipfilename }}"
@@ -59,6 +65,9 @@
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
     remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True
+#  with_items:
+#    - "{{ (local_jboss_zipfile.stat.exists)|{src: "/tmp/{{ jboss_zipfilename }}", remote_src: no} }}"
+#    - "{{ (local_jboss_zipfile.stat.exists == False)|{src: "{{ jboss_repo }}", remote_src: yes} }}"     
 
 - debug:
     msg: "clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"
@@ -216,6 +225,12 @@
   shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
   register: mgmt_bind_loopback
   ignore_errors: yes
+
+- name: Wait 2 seconds for port 8080 to become open
+  wait_for:
+    port: 8080
+    delay: 2
+    timeout: 60
 
 - name: Updating  standalone.xml to bind mgmt
   become: yes
