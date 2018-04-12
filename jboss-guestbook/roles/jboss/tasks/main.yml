@@ -239,7 +239,7 @@
   notify: restart webservice
   xml:
     path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-    xpath: /server/interfaces/interface[@name='management']/inet-address
+    xpath: /x:server/x:interfaces/x:interface[@name='management']/x:inet-address
     attribute: value
     namespaces:
       x: "urn:jboss:domain:6.0"
