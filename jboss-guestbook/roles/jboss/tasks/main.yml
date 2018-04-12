@@ -237,10 +237,13 @@
   notify: restart webservice
   xml:
     path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-    xpath: /server/interfaces/interface[@name='management']/inet-address[@value]
+    xpath: /server/interfaces/interface[@name='management']/inet-address
+    attribute: value
+    namespaces:
+      x: "urn:jboss:domain:6.0"
 # original value="${jboss.bind.address.management:127.0.0.1}"
     value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
-  when: mgmt_bind_loopback == 1 
+  when: mgmt_bind_loopback.stdout == "1" 
 # no need to change binding for public interface because it done in wildfly.conf to all interfaces
 
 - name: Wait 2 seconds for port 8080 to become open
