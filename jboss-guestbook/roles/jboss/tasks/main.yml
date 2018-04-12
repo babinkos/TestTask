@@ -211,19 +211,6 @@
 #  notify: restart webservice
 
 
-#- name: updating default standalone.xml to bind mgmt on all interfaces for debugging
-#  become: yes
-#  become_method: sudo
-#  become_user: "{{ jboss_svc_username }}"
-#  notify: restart webservice
-#  replace:
-#    group: "{{ jboss_svc_username }}"
-#    owner: "{{ jboss_svc_username }}"
-#    mode: 0755
-#    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-#    regexp: 'management\:127\.0\.0\.0'
-#    replace: 'management\:0\.0\.0\.0'
-#    backup: yes
 
 - name: check if jboss/wildfly mgmt interface is on loopback address
   shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
@@ -241,10 +228,11 @@
     attribute: value
     namespaces:
       x: "urn:jboss:domain:6.0"
-# original value="${jboss.bind.address.management:127.0.0.1}"
+# original value="${jboss.bind.address.management:127.0.0.1} -> ip changing to inventory value"
+# assuming we remember that /etc/ansible/hosts contain IPs
     value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
   when: mgmt_bind_loopback.stdout == "1" 
-# no need to change binding for public interface because it done in wildfly.conf to all interfaces
+# no need to change binding for public interface because it done in wildfly.conf to all interfaces (WILDFLY_BIND=0.0.0.0)
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:

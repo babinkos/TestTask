@@ -1,6 +1,11 @@
 #!/bin/bash
-DBIP="192.168.56.102"
-WEBIP=$DBIP
+DBIP=$1
+if [ -z "$2" ]; then
+ WEBIP=$1
+else
+ WEBIP=$2
+fi
+
 sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chmod 400 /home/vagrant/.ssh/id_rsa
 ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts
