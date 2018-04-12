@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     jbossapp.vm.network :private_network, ip: privip_app
     jbossapp.vm.network "forwarded_port", guest: 8080, host: 8080, autocorrect: true
     jbossapp.vm.network "forwarded_port", guest: 8443, host: 8443, autocorrect: true
-    jbossapp.vm.network "forwarded_port", guest: 9990, , guest_ip: privip_app, host: 9990, host_ip: 127.0.0.1, autocorrect: true
+    jbossapp.vm.network "forwarded_port", guest: 9990, guest_ip: privip_app, host: 9990, host_ip: "127.0.0.1", autocorrect: true
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     jbossapp.vm.provision "shell", path: "jboss-app-install.sh", privileged: false, args: privip_ansible
     # remove line below after tests finished
