@@ -211,28 +211,37 @@
 #  notify: restart webservice
 
 
-- name: updating default standalone.xml to bind mgmt on all interfaces for debugging
+#- name: updating default standalone.xml to bind mgmt on all interfaces for debugging
+#  become: yes
+#  become_method: sudo
+#  become_user: "{{ jboss_svc_username }}"
+#  notify: restart webservice
+#  replace:
+#    group: "{{ jboss_svc_username }}"
+#    owner: "{{ jboss_svc_username }}"
+#    mode: 0755
+#    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
+#    regexp: 'management\:127\.0\.0\.0'
+#    replace: 'management\:0\.0\.0\.0'
+#    backup: yes
+
+- name: check if jboss/wildfly mgmt interface is on loopback address
+  command: 'netstat -na | fgrep -c "127.0.0.1:9990"'
+  register: mgmt_bind_loopback
+  ignore_errors: yes
+
+- name: Updating  standalone.xml to bind mgmt
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   notify: restart webservice
-  replace:
-    group: "{{ jboss_svc_username }}"
-    owner: "{{ jboss_svc_username }}"
-    mode: 0755
+  xml:
     path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-    regexp: 'management\:127\.0\.0\.0'
-    replace: 'management\:0\.0\.0\.0'
-    backup: yes
-
-#- name: updating default standalone.xml to bind on all interfaces for debugging
-#  become: yes
-#  notify: restart webservice
-#  replace:
-#    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
-#    regexp: 'jboss\.bind\.address\:127\.0\.0\.0'
-#    replace: 'jboss\.bind\.address\:0\.0\.0\.0'
-#    backup: yes
+    xpath: /server/interfaces/interface[@name='management']/inet-address[@value]
+# original value="${jboss.bind.address.management:127.0.0.1}"
+    value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
+  when: mgmt_bind_loopback == 1 
+# no need tto change binding for public interface because it done in wildfly.conf to all interfaces
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
