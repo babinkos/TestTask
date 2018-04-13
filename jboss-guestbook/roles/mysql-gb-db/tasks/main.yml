@@ -25,6 +25,7 @@
     src: "/tmp/{{ app_zipfile }}"
     dest: "{{ gb_dirname }}"
     creates: "{{ gb_dirname + '/' + gb_dbdump }}"
+    remote_src: yes
   when: dumpfilestate.stat.exists == False and localappfilestate.stat.exists == True
 
 

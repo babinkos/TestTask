@@ -24,7 +24,7 @@
 #    src: "{{ application_repo }}"
     dest: "{{ gb_dirname }}"
     creates: "{{ gb_dirname + '/' + gb_configfile }}"
-#    remote_src: yes
+    remote_src: yes
   when: xmlfilestate.stat.exists == False
 
 - name: fixing owner for app folder (owner was root)

@@ -67,6 +67,7 @@
     src: "/tmp/{{ jboss_zipfilename }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+    remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
 #  with_items:
 #    - "{{ (local_jboss_zipfile.stat.exists)|{src: "/tmp/{{ jboss_zipfilename }}", remote_src: no} }}"
