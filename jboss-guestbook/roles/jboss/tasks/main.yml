@@ -56,7 +56,7 @@
   register: local_jboss_zipfile
 
 - debug:
-  msg: "/tmp/{{ jboss_zipfilename }} {{ local_jboss_zipfile.stat.exists }}"
+  msg: "{{ jboss_zipfilename }} exist in tmp {{ local_jboss_zipfile.stat.exists }}"
   
 - name: unpack JBOSS zip from tmp and Unarchive
   become: yes
