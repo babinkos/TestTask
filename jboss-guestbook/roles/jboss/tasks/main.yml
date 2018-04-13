@@ -240,6 +240,7 @@
 
 - name: check standalone_xml_file with grep
   command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+  ignore_errors: yes
   register: mgmt_ip_bind
 
 - debug:
