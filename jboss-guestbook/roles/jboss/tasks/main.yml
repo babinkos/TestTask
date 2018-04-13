@@ -238,6 +238,9 @@
   register: mgmt_bind_loopback
   ignore_errors: yes
 
+- debug:
+    var: mgmt_bind_loopback
+
 - name: check config for mgmt binding address
   stat:
     path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
@@ -276,13 +279,14 @@
 # original value="${jboss.bind.address.management:127.0.0.1} -> ip changing to inventory value"
 # assuming we remember that /etc/ansible/hosts contain IPs
     value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
-  when: mgmt_bind_loopback.stdout == "1" 
+  # when clause is to check that binding for mgmt interface not already changed in standalone.xml  
+  when: "0" in mgmt_ip_bind.stdout 
 # no need to change binding for public interface because it done in wildfly.conf to all interfaces (WILDFLY_BIND=0.0.0.0)
 
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
     port: 8080
-    delay: 2
+    delay: 1
     timeout: 60
 
 - name: Check wildfly web-service is running or not vs HTTPS 
