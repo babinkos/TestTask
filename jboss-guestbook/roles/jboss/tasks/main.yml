@@ -230,6 +230,21 @@
   register: mgmt_bind_loopback
   ignore_errors: yes
 
+- name: check config for mgmt binding address
+  stat:
+    path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+    register: standalone_xml_file
+  
+- debug:
+  var: standalone_xml_file
+
+- name: check standalone_xml_file with grep
+  command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+  register: mgmt_ip_bind
+
+- debug:
+  var: mgmt_ip_bind
+  
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
     port: 8080
@@ -242,7 +257,9 @@
   become_user: "{{ jboss_svc_username }}"
   notify: restart webservice
   xml:
-    path: "{{ jboss_rootdir}}/standalone/configuration/standalone.xml"
+    backup: yes
+    pretty_print: yes 
+    path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
     xpath: /x:server/x:interfaces/x:interface[@name='management']/x:inet-address
     attribute: value
     namespaces:
