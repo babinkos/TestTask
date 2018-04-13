@@ -35,6 +35,6 @@ echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 #ssh -qv -o BatchMode=yes -o StrictHostKeyChecking=no -o HostKeyAlgorithms=ssh-rsa -o ConnectTimeout=10 vagrant@$DBIP "ip addr;exit"
-ansible-galaxy install -c -v -r /home/vagrant/TestTask/requirements.yml
+ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml

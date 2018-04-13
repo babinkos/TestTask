@@ -89,6 +89,11 @@
  
 - debug:
     msg: "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+
+- name: stop if jboss not unpacked
+  fail:
+  when: jarstate.stat.exists == False
+
  
 - name: Ensure group for jboss service exists
   become: yes
