@@ -280,7 +280,7 @@
 # assuming we remember that /etc/ansible/hosts contain IPs
     value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
   # when clause is to check that binding for mgmt interface not already changed in standalone.xml  
-  when: "0" in mgmt_ip_bind.stdout 
+  when: '"0" in mgmt_ip_bind.stdout' 
 # no need to change binding for public interface because it done in wildfly.conf to all interfaces (WILDFLY_BIND=0.0.0.0)
 
 - name: Wait 2 seconds for port 8080 to become open
