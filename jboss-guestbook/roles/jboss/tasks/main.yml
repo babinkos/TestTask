@@ -233,7 +233,7 @@
 - name: check config for mgmt binding address
   stat:
     path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
-    register: standalone_xml_file
+  register: standalone_xml_file
   
 - debug:
   var: standalone_xml_file
