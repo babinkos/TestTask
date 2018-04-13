@@ -1,6 +1,6 @@
 - hosts: all
   pre_tasks:
-    - name: Verify Ansible meets Drupal VM's version requirements.
+    - name: Verify Ansible meets version requirements.
       assert:
         that: "ansible_version.full | version_compare('2.1', '>=')"
         msg: >

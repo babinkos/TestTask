@@ -5,13 +5,18 @@
 #boxname = "ubuntu/xenial64"
 # pybox is a tuned ubuntu/xenial64 local vbox - see git@github.com:babinkos/vagrant-pybox.git
 boxname = "pybox"
+
 Vagrant.require_version ">= 2.0.0"
-privip_ansible="192.168.56.101"
-privip_app="192.168.56.102"
+privip_ansible="192.168.57.101"
+privip_app="192.168.57.102"
 
 Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
+  config.vm.provider "libvirt" do |v, override|
+    override.vm.box = "generic/ubuntu1604"
+  end  
+  
   config.vm.define "jbossapp" do |jbossapp|
     jbossapp.vm.hostname = "jboss-app"
     jbossapp.vm.box = boxname

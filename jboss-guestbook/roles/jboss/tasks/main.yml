@@ -225,6 +225,14 @@
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
 
+- name: Wait 60 seconds for port 9990
+  wait_for:
+    host: 127.0.0.1
+    port: 9990
+    delay: 1
+    state: started
+    timeout: 60
+
 - name: check if jboss/wildfly mgmt interface is on loopback address
   shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
   register: mgmt_bind_loopback
@@ -238,7 +246,7 @@
 - debug:
     var: standalone_xml_file
 
-- name: check standalone_xml_file with grep
+- name: check standalone_xml_file with grep if already changed
   command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
   ignore_errors: yes
   register: mgmt_ip_bind

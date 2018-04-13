@@ -9,7 +9,7 @@ fi
 sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chmod 400 /home/vagrant/.ssh/id_rsa
 ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts
-
+sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get dist-upgrade -y
