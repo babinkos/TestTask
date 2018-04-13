@@ -236,14 +236,14 @@
   register: standalone_xml_file
   
 - debug:
-  var: standalone_xml_file
+    var: standalone_xml_file
 
 - name: check standalone_xml_file with grep
   command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
   register: mgmt_ip_bind
 
 - debug:
-  var: mgmt_ip_bind
+    var: mgmt_ip_bind
   
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
