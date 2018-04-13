@@ -54,20 +54,29 @@
   stat:
     path: "/tmp/{{ jboss_zipfilename }}"
   register: local_jboss_zipfile
+
+- debug:
+  msg: "/tmp/{{ jboss_zipfilename }} {{ local_jboss_zipfile.stat.exists }}"
   
+- name: unpack JBOSS zip from tmp and Unarchive
+  become: yes
+  unarchive:
+    src: "/tmp/{{ jboss_zipfilename }}"
+    dest: "{{ jboss_unzip_dirname }}"
+    creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+  when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
+#  with_items:
+#    - "{{ (local_jboss_zipfile.stat.exists)|{src: "/tmp/{{ jboss_zipfilename }}", remote_src: no} }}"
+#    - "{{ (local_jboss_zipfile.stat.exists == False)|{src: "{{ jboss_repo }}", remote_src: yes} }}"     
+
 - name: Download JBOSS zip and Unarchive
   become: yes
   unarchive:
-#    src: "/tmp/{{ jboss_zipfilename }}"
-# comment src and remote_src for tests
     src: "{{ jboss_repo }}"
     dest: "{{ jboss_unzip_dirname }}"
     creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
     remote_src: yes
-  when: jarstate.stat.exists == False and  dirstate.stat.exists == True
-#  with_items:
-#    - "{{ (local_jboss_zipfile.stat.exists)|{src: "/tmp/{{ jboss_zipfilename }}", remote_src: no} }}"
-#    - "{{ (local_jboss_zipfile.stat.exists == False)|{src: "{{ jboss_repo }}", remote_src: yes} }}"     
+  when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
 
 - debug:
     msg: "clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"

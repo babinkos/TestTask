@@ -18,7 +18,7 @@ sudo apt-get install python-software-properties -y
 sudo apt-add-repository ppa:ansible/ansible -y
 sudo apt-get update
 sudo apt-get install ansible -y
-ansible-galaxy install geerlingguy.mysql
+ansible-galaxy -c -v install geerlingguy.mysql
 echo "[all:vars]" | sudo tee /etc/ansible/hosts
 echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
 echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
