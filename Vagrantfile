@@ -22,7 +22,9 @@ Vagrant.configure("2") do |config|
     jbossapp.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     jbossapp.vm.provision "shell", path: "jboss-app-install.sh", privileged: false, args: privip_ansible
     # remove line below after tests finished
-    jbossapp.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
+    if File.exist?("jboss-modules-1.1.5.GA.jar") then
+      jbossapp.vm.provision "file", source: "jboss-modules-1.1.5.GA.jar", destination: "/tmp/jboss-modules-1.1.5.GA.jar"
+    end
     # if in the future we'll want to refactor to provision at once this is the hint: 
     #jbossapp.vm.provision "ansible" do |ansible|
     #  ansible.verbose = "v"
@@ -36,9 +38,16 @@ Vagrant.configure("2") do |config|
     ansiblesrv.vm.provision "file", source: "#{Dir.home}/.vagrant.d/insecure_private_key", destination: "/home/vagrant/.ssh/id_rsa"
     
     # remove this line below after testing and uncomment /roles/jboss/main.yml unarchieve module original source
-    ansiblesrv.vm.provision "file", source: "jboss-as-7.1.1.Final.zip", destination: "/tmp/jboss-as-7.1.1.Final.zip"
-    ansiblesrv.vm.provision "file", source: "wildfly-12.0.0.Final.zip", destination: "/tmp/wildfly-12.0.0.Final.zip"
-    ansiblesrv.vm.provision "file", source: "guestbookapp.zip", destination: "/tmp/guestbookapp.zip"
+    if File.exist?("jboss-as-7.1.1.Final.zip") then
+      ansiblesrv.vm.provision "file", source: "jboss-as-7.1.1.Final.zip", destination: "/tmp/jboss-as-7.1.1.Final.zip"
+    end
+    if File.exist?("wildfly-12.0.0.Final.zip") then
+      ansiblesrv.vm.provision "file", source: "wildfly-12.0.0.Final.zip", destination: "/tmp/wildfly-12.0.0.Final.zip"
+    end
+    if File.exist?("guestbookapp.zip") then
+      ansiblesrv.vm.provision "file", source: "guestbookapp.zip", destination: "/tmp/guestbookapp.zip"
+    end
+    
     
     ansiblesrv.vm.provision "shell", path: "ansible-srv-install.sh", privileged: false, args: privip_app
   end  
