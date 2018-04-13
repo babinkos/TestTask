@@ -57,6 +57,8 @@
 
 - debug:
     var: local_jboss_zipfile
+
+- debug:    
     msg: "(/tmp/{{ jboss_zipfilename }}) exist in tmp {{ local_jboss_zipfile.stat.exists }}"
   
 - name: unpack JBOSS zip from tmp and Unarchive
@@ -221,19 +223,6 @@
   become: yes
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
-
-#restart webservice
-# /standalone/configuration/standalone.xml 127.0.0.1
-#            <inet-address value="${jboss.bind.address.management:0.0.0.0}"/>
-#            <inet-address value="${jboss.bind.address:0.0.0.0}"/>
-# sed -i 's/original/new/g'
-# put a \ before any of $ * . [ \ ^ to get the literal character
-
-#- name: using old good sed
-#  command: 'sed -i s/jboss\.bind\.address\.management\:127\.0\.0\.0/jboss\.bind\.address\.management\:0\.0\.0\.0/g +{{ jboss_rootdir}}+'/standalone/configuration/standalone.xml'
-#  notify: restart webservice
-
-
 
 - name: check if jboss/wildfly mgmt interface is on loopback address
   shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
