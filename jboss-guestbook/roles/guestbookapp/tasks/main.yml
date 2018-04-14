@@ -47,9 +47,11 @@
   
 - name: Remove <elastic-load-balancer> section
   become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
   xml:
     path: "{{ gb_dirname + '/' + gb_configfile }}"
-    xpath: /cumulogic-app/services/@elastic-load-balancer
+    xpath: /cumulogic-app/services/elastic-load-balancer
     state: absent
   when: xmlfilestate.stat.exists == True 
   
@@ -61,6 +63,38 @@
 
 - debug:
     msg: "filepath {{ gb_dirname + '/' + gb_warfile }} state finally exists {{ warfilestate.stat.exists }}"
+
+- name: Move config file
+  copy:
+    remote_src: yes
+    src: "{{ gb_dirname + '/' + gb_configfile }}"
+    dest: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile }}"
+    owner: "{{ jboss_svc_username }}"
+    group: "{{ jboss_svc_username }}"
+    mode: 0644
+    backup: yes
+
+- name: Check that cfg file exists
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
+  stat:
+    path: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile }}"
+  register: cfgfilestate
+
+- name: stop if xml file was copied
+  fail:
+  when: cfgfilestate.stat.exists == False
+
+- name: remove old files
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  command: "rm {{ gb_dirname + '/' + gb_configfile }} {{ gb_dirname + '/' + gb_dbdump }}"
+  register: remold
+  
+- debug:
+    var: remold
 
 - name: Deploy war app in jboss/wildfly
   become: yes
