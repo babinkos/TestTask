@@ -7,13 +7,15 @@
 boxname = "pybox"
 
 Vagrant.require_version ">= 2.0.0"
-privip_ansible="192.168.57.101"
-privip_app="192.168.57.102"
+ipsubnet="192.168.56."
+privip_ansible=ipsubnet+"101"
+privip_app=ipsubnet+"102"
 
 Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   config.vm.provider "libvirt" do |v, override|
+    ipsubnet="192.168.57."
     override.vm.box = "generic/ubuntu1604"
   end  
   

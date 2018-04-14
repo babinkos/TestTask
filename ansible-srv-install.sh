@@ -6,18 +6,45 @@ else
  WEBIP=$2
 fi
 
+echo "temporary stop scheduled apt daily jobs to avoid conflicts on locks"
+#pgrep -f 'apt|adept|dpkg'
+pgrep -a apt-get
+sudo lsof /var/lib/dpkg/lock
+sudo systemctl stop apt-daily.timer
+pgrep -a apt-get
+#pgrep -f 'apt|adept|dpkg'
+sudo lsof /var/lib/dpkg/lock
+
 sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chmod 400 /home/vagrant/.ssh/id_rsa
+echo "ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts"
 ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts
+echo "/etc/apt/sources.list updated to use mirror.yandex.ru"
 sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
+echo "update package list"
+#pgrep -f 'apt|adept|dpkg'
+sudo lsof /var/lib/dpkg/lock
+pgrep -a apt-get
 sudo apt-get update
+sudo lsof /var/lib/dpkg/lock
+echo "upgrade packages"
+sudo apt-get upgrade -y
+sudo lsof /var/lib/dpkg/lock
+echo "upgrade core system packages (dist-upgrade)"
 sudo apt-get dist-upgrade -y
+sudo lsof /var/lib/dpkg/lock
+echo "installing tools to configure ppa"
 sudo apt-get install software-properties-common -y
 sudo apt-get install python-software-properties -y
+echo "adding ppa:ansible to sources"
 sudo apt-add-repository ppa:ansible/ansible -y
+echo "refreshing packages list to get new ones from added ppa"
 sudo apt-get update
+echo "installing fresh ansible from ppa"
 sudo apt-get install ansible -y
+echo "restoring scheduled apt daily jobs after upgrading"
+sudo systemctl start apt-daily.timer
 #ansible-galaxy -c -v install geerlingguy.mysql
 echo "[all:vars]" | sudo tee /etc/ansible/hosts
 echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
