@@ -64,22 +64,26 @@
 - debug:
     msg: "filepath {{ gb_dirname + '/' + gb_warfile }} state finally exists {{ warfilestate.stat.exists }}"
 
-- name: Move config file
+- name: copy config file to configuration folder
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
   copy:
     remote_src: yes
     src: "{{ gb_dirname + '/' + gb_configfile }}"
-    dest: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile }}"
+# to use xml filename only we need .split('/')[-1] in because gb_configfile contains subdir name    
+    dest: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile.split('/')[-1] }}"
     owner: "{{ jboss_svc_username }}"
     group: "{{ jboss_svc_username }}"
     mode: 0644
     backup: yes
 
-- name: Check that cfg file exists
+- name: Check that cfg file exists in configuration folder
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"  
   stat:
-    path: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile }}"
+    path: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile.split('/')[-1] }}"
   register: cfgfilestate
 
 - name: stop if xml file was copied
