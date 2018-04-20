@@ -14,7 +14,7 @@
 
 - name: Create subdir for jboss app if not exists
   become: yes
-  file: path= "{{ jboss_rootdir }}" state= directory mode= 0755
+  file: path="{{ jboss_rootdir }}" state=directory mode=0755
   when: dirstate.stat.exists == False
 
 - name: Check that the jboss directory exists or not
@@ -55,7 +55,7 @@
     remote_src: yes
   when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
 
-- debug: msg= "clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"
+- debug: msg="clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"
 
 - name: Check that the jboss jar file exists or not
   become: yes
