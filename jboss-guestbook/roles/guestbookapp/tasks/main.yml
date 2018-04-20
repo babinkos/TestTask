@@ -86,7 +86,7 @@
     path: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile.split('/')[-1] }}"
   register: cfgfilestate
 
-- name: stop if xml file was copied
+- name: stop if xml file was not copied
   fail:
   when: cfgfilestate.stat.exists == False
 
