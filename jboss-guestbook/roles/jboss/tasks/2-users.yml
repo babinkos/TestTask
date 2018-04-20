@@ -1,6 +1,6 @@
 - name: Ensure group for jboss service exists
   become: yes
-  group: name= "{{ jboss_svc_username }}" state= present
+  group: name="{{ jboss_svc_username }}" state=present
 
 - name: add OS user for jboss service
   become: yes

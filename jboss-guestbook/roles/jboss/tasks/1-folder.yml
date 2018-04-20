@@ -1,16 +1,16 @@
 - name: Check that the jboss directory already exists
   become: yes
-  stat: path= "{{ jboss_rootdir }}"
+  stat: path="{{ jboss_rootdir }}"
   register: dirstate
 
-- debug: msg= "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
+- debug: msg="filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
 
 - name: Check that the jboss jar file already exists
   become: yes
-  stat: path= "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+  stat: path="{{ jboss_rootdir + '/' + jboss_jarfile }}"
   register: jarstate
 
-- debug: msg= "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+- debug: msg="filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
 
 - name: Create subdir for jboss app if not exists
   become: yes
@@ -19,20 +19,20 @@
 
 - name: Check that the jboss directory exists or not
   become: yes
-  stat: path= "{{ jboss_rootdir }}"
+  stat: path="{{ jboss_rootdir }}"
   register: dirstate
 
-- debug: msg= "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
+- debug: msg="filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
 
 - name: Check that the jboss source zip in tmp exists or not
   become: yes
-  stat: path= "/tmp/{{ jboss_zipfilename }}"
+  stat: path="/tmp/{{ jboss_zipfilename }}"
   register: local_jboss_zipfile
 
 - debug: 
     var: local_jboss_zipfile
 
-- debug: msg= "(/tmp/{{ jboss_zipfilename }}) exist in tmp {{ local_jboss_zipfile.stat.exists }}"
+- debug: msg="(/tmp/{{ jboss_zipfilename }}) exist in tmp {{ local_jboss_zipfile.stat.exists }}"
   
 - name: unpack JBOSS zip from tmp and Unarchive
   become: yes
@@ -59,10 +59,10 @@
 
 - name: Check that the jboss jar file exists or not
   become: yes
-  stat: path= "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+  stat: path="{{ jboss_rootdir + '/' + jboss_jarfile }}"
   register: jarstate
  
-- debug: msg= "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+- debug: msg="filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
 
 - name: stop if jboss sources is not unpacked and modules.jar doesn't exists
   fail:
