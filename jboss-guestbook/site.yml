@@ -3,7 +3,7 @@
   pre_tasks:
     - name: Verify Ansible meets version requirements.
       assert:
-        that: "ansible_version.full | version_compare('2.1', '>=')"
+        that: "ansible_version.full is version_compare('2.1', '>=')"
         msg: >
           "You must update Ansible to at least 2.1 to use this playbook"
                 

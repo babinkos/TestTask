@@ -29,7 +29,8 @@
   stat: path= "/tmp/{{ jboss_zipfilename }}"
   register: local_jboss_zipfile
 
-- debug: var= local_jboss_zipfile
+- debug: 
+    var: local_jboss_zipfile
 
 - debug: msg= "(/tmp/{{ jboss_zipfilename }}) exist in tmp {{ local_jboss_zipfile.stat.exists }}"
   
