@@ -45,7 +45,7 @@ echo "installing fresh ansible from ppa"
 sudo apt-get install ansible -y
 echo "restoring scheduled apt daily jobs after upgrading"
 sudo systemctl start apt-daily.timer
-#ansible-galaxy -c -v install geerlingguy.mysql
+
 echo "[all:vars]" | sudo tee /etc/ansible/hosts
 echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
 echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
@@ -62,6 +62,7 @@ echo "jboss-guestbook/*" >> .git/info/sparse-checkout
 git pull origin dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 #ssh -qv -o BatchMode=yes -o StrictHostKeyChecking=no -o HostKeyAlgorithms=ssh-rsa -o ConnectTimeout=10 vagrant@$DBIP "ip addr;exit"
+# eralier was installed: ansible-galaxy -c -v install geerlingguy.mysql
 ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml -v 2>&1 | tee playlog.txt

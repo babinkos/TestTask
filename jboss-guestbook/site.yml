@@ -1,4 +1,5 @@
-- hosts: all
+# checking only on controller whis ansible installed, need 2.1+ because of modern syntax used
+- hosts: 127.0.0.1
   pre_tasks:
     - name: Verify Ansible meets version requirements.
       assert:

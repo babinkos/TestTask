@@ -1,0 +1,82 @@
+- name: Check that the jboss directory already exists
+  become: yes
+  stat: path= "{{ jboss_rootdir }}"
+  register: dirstate
+
+- debug: msg= "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
+
+- name: Check that the jboss jar file already exists
+  become: yes
+  stat: path= "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+  register: jarstate
+
+- debug: msg= "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+
+- name: Create subdir for jboss app if not exists
+  become: yes
+  file: path= "{{ jboss_rootdir }}" state= directory mode= 0755
+  when: dirstate.stat.exists == False
+
+- name: Check that the jboss directory exists or not
+  become: yes
+  stat: path= "{{ jboss_rootdir }}"
+  register: dirstate
+
+- debug: msg= "filepath {{ jboss_rootdir }} state exists {{ dirstate.stat.exists }}"
+
+- name: Check that the jboss source zip in tmp exists or not
+  become: yes
+  stat: path= "/tmp/{{ jboss_zipfilename }}"
+  register: local_jboss_zipfile
+
+- debug: var= local_jboss_zipfile
+
+- debug: msg= "(/tmp/{{ jboss_zipfilename }}) exist in tmp {{ local_jboss_zipfile.stat.exists }}"
+  
+- name: unpack JBOSS zip from tmp and Unarchive
+  become: yes
+  unarchive:
+    src: "/tmp/{{ jboss_zipfilename }}"
+    dest: "{{ jboss_unzip_dirname }}"
+    creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+    remote_src: yes
+  when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
+#  with_items:
+#    - "{{ (local_jboss_zipfile.stat.exists)|{src: "/tmp/{{ jboss_zipfilename }}", remote_src: no} }}"
+#    - "{{ (local_jboss_zipfile.stat.exists == False)|{src: "{{ jboss_repo }}", remote_src: yes} }}"     
+
+- name: Download JBOSS zip and Unarchive
+  become: yes
+  unarchive:
+    src: "{{ jboss_repo }}"
+    dest: "{{ jboss_unzip_dirname }}"
+    creates: "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+    remote_src: yes
+  when: jarstate.stat.exists == False and  dirstate.stat.exists == True and local_jboss_zipfile.stat.exists == True
+
+- debug: msg= "clause to download zip was  when:{{ jarstate.stat.exists == False and  dirstate.stat.exists == True }}"
+
+- name: Check that the jboss jar file exists or not
+  become: yes
+  stat: path= "{{ jboss_rootdir + '/' + jboss_jarfile }}"
+  register: jarstate
+ 
+- debug: msg= "filepath {{ jboss_rootdir + '/' + jboss_jarfile }} state exists {{ jarstate.stat.exists }}"
+
+- name: stop if jboss sources is not unpacked and modules.jar doesn't exists
+  fail:
+  when: jarstate.stat.exists == False
+  
+# fix for issue with jboss-7 jar (see https://stackoverflow.com/questions/48403832/javax-xml-parsers-factoryconfigurationerror-running-jboss-as-7-1-with-java-7-upd)
+- name: hotfix for jboss-modules.jar if JB0ss-7 used
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  get_url:
+# comment remote url for tests
+#    url: "{{ jboss_hotfix }}"
+    url: file:///tmp/jboss-modules-1.1.5.GA.jar
+    dest: "{{ jboss_rootdir }}/jboss-modules.jar"
+    force: yes
+  when: jboss_repo == "http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip"    
+  

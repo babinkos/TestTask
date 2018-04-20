@@ -1,0 +1,125 @@
+- name: create wildfly config file
+  become: yes
+  become_method: sudo
+  template:
+    src: wildfly.conf.j2
+    dest: /etc/default/wildfly.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  notify:
+      - reload systemctl    
+
+- name: create wildfly service file
+  become: yes
+  become_method: sudo
+  template:
+    src: wildfly.service.j2
+    dest: /etc/systemd/system/wildfly.service
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes        
+
+- name: create wildfly startup stript
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  template:
+    src: launch.sh.j2
+    dest: "{{ jboss_bindir }}/launch.sh"
+    owner: "{{ jboss_svc_username }}"
+    group: "{{ jboss_svc_username }}"
+    mode: '0755'
+    backup: yes   
+    
+- name: Make sure wildfly service is running
+  become: yes
+  become_method: sudo
+  systemd: state=started name=wildfly.service  enabled=yes
+
+- name: Wait 60 seconds for port 9990
+  wait_for:
+    host: 127.0.0.1
+    port: 9990
+    delay: 1
+    state: started
+    timeout: 60
+
+- name: check if jboss/wildfly mgmt interface is on loopback address
+  shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
+  register: mgmt_bind_loopback
+  ignore_errors: yes
+
+- debug:
+    var: mgmt_bind_loopback
+
+- name: check config for mgmt binding address
+  stat:
+    path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+  register: standalone_xml_file
+  
+- debug:
+    var: standalone_xml_file
+
+- name: check standalone_xml_file with grep if already changed
+  command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+  ignore_errors: yes
+  register: mgmt_ip_bind
+
+- debug:
+    var: mgmt_ip_bind
+  
+- name: Wait 2 seconds for port 8080 to become open
+  wait_for:
+    port: 8080
+    delay: 2
+    timeout: 60
+
+- name: Updating  standalone.xml to bind mgmt
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  notify: restart webservice
+  xml:
+    backup: yes
+    pretty_print: yes 
+    path: "{{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+    xpath: /x:server/x:interfaces/x:interface[@name='management']/x:inet-address
+    attribute: value
+    namespaces:
+      x: "urn:jboss:domain:6.0"
+#     original value="${jboss.bind.address.management:127.0.0.1} -> ip changing to inventory value"
+#     assuming we remember that /etc/ansible/hosts contain IPs
+    value: "${jboss.bind.address.management:{{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}}"
+#     when clause is to check that binding for mgmt interface not already changed in standalone.xml  
+  when: '"0" in mgmt_ip_bind.stdout' 
+#      no need to change binding for public interface because it done in wildfly.conf to all interfaces (WILDFLY_BIND=0.0.0.0)
+
+- name: Wait 2 seconds for port 8080 to become open
+  wait_for:
+    port: 8080
+    delay: 1
+    timeout: 60
+
+- name: Check wildfly web-service is running or not vs HTTPS 
+  uri:
+    url: https://localhost:8443
+    validate_certs: False
+    return_content: yes
+  register: httpswebpage
+
+- name: Fail if jboss.org is not in the page content
+  fail:
+  when: "'JBoss' not in httpswebpage.content"
+
+- name: Check wildfly web-service is running or not vs HTTP 
+  uri:
+    url: http://localhost:8080
+    return_content: yes
+  register: httpwebpage
+
+- name: Fail if jboss.org is not in the page content
+  fail:
+  when: "'JBoss' not in httpwebpage.content"      
