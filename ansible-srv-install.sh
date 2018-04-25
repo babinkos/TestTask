@@ -64,7 +64,7 @@ git pull origin dev
 sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 #ssh -qv -o BatchMode=yes -o StrictHostKeyChecking=no -o HostKeyAlgorithms=ssh-rsa -o ConnectTimeout=10 vagrant@$DBIP "ip addr;exit"
 # eralier was installed: ansible-galaxy -c -v install geerlingguy.mysql
-sudo ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
+ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
 ansible-playbook -i /home/vagrant/TestTask/jboss-guestbook/hosts /home/vagrant/TestTask/jboss-guestbook/site.yml 2>&1 | tee playlog.txt
 echo http://$WEBIP:8080/guestbookapp/
