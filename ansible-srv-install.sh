@@ -69,7 +69,14 @@ ansible all -m ping -v
 ansible-playbook -i /home/vagrant/TestTask/jboss-guestbook/hosts /home/vagrant/TestTask/jboss-guestbook/site.yml 2>&1 | tee playlog.txt
 echo http://$WEBIP:8080/guestbookapp/
 echo http://$WEBIP:8080/node-info/
-curl -v --url http://$WEBIP:8080/node-info/ --output sitetest1.txt 
+curl -sS -v --url http://$WEBIP:8080/node-info/ --output sitetest1.txt 
 cat sitetest1.txt
-curl -v --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt 
+echo .
+echo ..
+echo ...
+curl -sS -v --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt 
 cat sitetest2.txt
+echo .
+echo ..
+echo ...
+echo "...Job is done !!"
