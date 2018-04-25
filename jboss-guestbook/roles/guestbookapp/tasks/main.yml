@@ -109,14 +109,17 @@
     state: touch
   when: warfilestate.stat.exists == True 
   
-#- name: Check wildfly app is running or not vs HTTPS 
-#  uri:
-#    url: https://localhost:8443
-#    return_content: yes
+- name: Check wildfly guestbook app after deploy 
+  uri:
+    url: "http://localhost:8080/{{ app_name }}/"
+    return_content: yes
 #    validate_certs: False
-#  register: httpspwebpage
-#
-#- name: Fail if jboss.org is not in the page content
-#  fail:
-#  when: "'.jboss.org' not in httpswebpage.content" 
+  register: httpwebpage
+
+- debug:
+    var: httpwebpage
+
+#- fetch:
+#    src: 
+
    
