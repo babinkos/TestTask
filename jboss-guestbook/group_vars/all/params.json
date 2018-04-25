@@ -22,6 +22,6 @@
 	"mysql_port": "3306",
 	"ansible_ssh_common_args": "-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa",
 	"node_repo": "https://github.com/goldmann/wildfly-docker-deployment-example/raw/master/node-info.war",
-	"node_appname": "{{ nodeinfo_repo.split('//')[-1].split('/')[-1].split('.')[0] }}",
+	"node_appname": "{{ node_repo.split('//')[-1].split('/')[-1].split('.')[0] }}",
 	"node_warfile": "{{ node_appname }}/{{ nodeinfo_repo.split('//')[-1].split('/')[-1] }}"
 }
