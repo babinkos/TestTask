@@ -66,3 +66,5 @@ sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
 ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml -v 2>&1 | tee playlog.txt
+curl "http://$WEBIP:8080/guestbookapp/"
+curl "http://$WEBIP:8080/node-info/"
