@@ -11,7 +11,7 @@
 - name: Create subdir for node app if not exists
   become: yes
   file: path="{{ jboss_deployment_dir + '/' + node_appname }}" state=directory mode=0755
-  creates: "{{ jboss_deployment_dir +'/' + node_appname }}"
+#  creates: "{{ jboss_deployment_dir +'/' + node_appname }}"
   when: dirstate.stat.exists == False
 
 - name: Check that the node war file exists or not
