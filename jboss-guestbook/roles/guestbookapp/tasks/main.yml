@@ -138,7 +138,15 @@
     path: "{{ jboss_deployment_dir + '/' + gb_warfile + '.dodeploy' }}"
     state: touch
   when: warfilestate.stat.exists == True and deployedfilestate.stat.exists == False 
-  
+
+- name: waiting for guestbook war deployment to finish
+  wait_for:
+    delay: 1
+    timeout: 60
+    path: "{{ jboss_deployment_dir + '/' + gb_warfile + '.deployed' }}"
+    state: present
+    msg: Timeout to find file "{{ jboss_deployment_dir + '/' + gb_warfile + '.deployed' }}"
+
 - name: Check wildfly guestbook app http url after deploy 
   uri:
     url: "http://localhost:8080/{{ app_name }}/"

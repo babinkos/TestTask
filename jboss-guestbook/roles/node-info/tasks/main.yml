@@ -64,6 +64,15 @@
     path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile + '.dodeploy' }}"
     state: touch
   when: nodewarfilestate.stat.exists == True and deployedfilestate.stat.exists == False 
+
+- name: waiting for node-info.war deployment to finish
+  wait_for:
+    delay: 1
+    timeout: 60
+    path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile + '.deployed' }}"
+    state: present
+    msg: Timeout to find file "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile + '.deployed' }}"
+#"{{ jboss_bindir }}/jboss-cli.sh -c --command='deployment-info --name={{ node_warfile }}' | fgrep -q OK"
   
 - name: Check wildfly guestbook app http url after deploy 
   uri:
