@@ -1,2 +1,89 @@
 ---
 # tasks file for node-info
+
+- name: Check that nodeapp directory already exists
+  become: yes
+  stat: path="{{ jboss_deployment_dir + '/' + node_appname }}"
+  register: dirstate
+
+- debug: msg="filepath {{ jboss_deployment_dir + '/' + node_appname }} state exists {{ dirstate.stat.exists }}"
+
+- name: Create subdir for node app if not exists
+  become: yes
+  file: path="{{ jboss_deployment_dir + '/' + node_appname }}" state=directory mode=0755
+  creates: "{{ jboss_deployment_dir +'/' + node_appname }}"
+  when: dirstate.stat.exists == False
+
+- name: Check that the node war file exists or not
+  become: yes
+  stat:
+    path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }}"
+  register: nodewarfilestate
+ 
+- debug:
+    msg: "filepath {{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }} state exists {{ nodewarfilestate.stat.exists }}"
+
+- name: Download nodeapp zip and Unarchive
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
+  unarchive:
+    src: "{{ node_repo }}"
+    dest: "{{ jboss_deployment_dir + '/' + node_appname + '/' }}"
+    creates: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }}"
+    remote_src: yes
+  when: nodewarfilestate.stat.exists == False
+
+# no need:
+#- name: fixing owner for app folder (owner was root)
+#  become: yes
+#  file:
+#    path: "{{ jboss_deployment_dir + '/' + node_appname + '/' }}"
+#    recurse: yes
+#    owner: "{{ jboss_svc_username }}"
+#    group: "{{ jboss_svc_username }}"
+#    mode: 0755
+  
+- name: Check that the node war file exists or not
+  become: yes
+  stat:
+    path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }}"
+  register: nodewarfilestate
+ 
+- debug:
+    msg: "filepath {{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }} state exists {{ nodewarfilestate.stat.exists }}"
+
+- name: stop if node-info.war file was not copied
+  fail:
+  when: nodewarfilestate.stat.exists == False
+
+
+#.deployed
+- name: Check that the deployed state file exists
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  stat:
+    path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile + '.deployed' }}"
+  register: deployedfilestate
+
+
+- name: Deploy war app in jboss/wildfly
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  file:
+    path: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile + '.dodeploy' }}"
+    state: touch
+  when: nodewarfilestate.stat.exists == True and deployedfilestate.stat.exists == False 
+  
+- name: Check wildfly guestbook app http url after deploy 
+  uri:
+    url: "http://localhost:8080/{{ node_appname }}/"
+    return_content: yes
+#    validate_certs: False
+  register: httpwebpage
+  failed_when: false
+
+- debug:
+    var: httpwebpage

@@ -30,4 +30,5 @@
   name: configure and deploy the application code
   roles:
       - guestbookapp
+      - node-info
 

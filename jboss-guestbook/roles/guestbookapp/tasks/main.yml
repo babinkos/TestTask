@@ -4,33 +4,53 @@
 - name: Check that the gb xml file exists or not
   become: yes
   stat:
-    path: "{{ gb_dirname + '/' + gb_configfile }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
   register: xmlfilestate
  
 - debug:
-    msg: "filepath {{ gb_dirname + '/' + gb_configfile }} state exists {{ xmlfilestate.stat.exists }}"
+    msg: "filepath {{ jboss_deployment_dir + '/' + gb_configfile }} state exists {{ xmlfilestate.stat.exists }}"
 
 #deployment
 #1. cp target/example.war $AS/standalone/deployments
 #2. (Manual mode only) touch $AS/standalone/deployments/example.war.dodeploy
 
-- name: Download app zip and Unarchive
+- name: Check that the app zip in tmp exists or not
+  become: yes
+  stat: path="/tmp/{{ app_zipfile }}"
+  register: local_gb_zipfile
+
+- debug: 
+    var: local_gb_zipfile
+
+- debug: msg="(/tmp/{{ app_zipfile }}) exist in tmp {{ local_gb_zipfile.stat.exists }}"
+
+- name: Download app zip and Unarchive from local tmp folder
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"  
   unarchive:
     src: "/tmp/{{ app_zipfile }}"
-# uncomment src and remote_src after tests
-#    src: "{{ application_repo }}"
-    dest: "{{ gb_dirname }}"
-    creates: "{{ gb_dirname + '/' + gb_configfile }}"
+    dest: "{{ jboss_deployment_dir }}"
+    creates: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
     remote_src: yes
-  when: xmlfilestate.stat.exists == False
+  when: xmlfilestate.stat.exists == False and local_gb_zipfile.stat.exists == True
+
+- name: Download app zip and Unarchive from remote source if local source unavailable
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"  
+  unarchive:
+    src: "{{ application_repo }}"
+    dest: "{{ jboss_deployment_dir }}"
+    creates: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
+    remote_src: yes
+  when: xmlfilestate.stat.exists == False and local_gb_zipfile.stat.exists == False
+
 
 - name: fixing owner for app folder (owner was root)
   become: yes
   file:
-    path: "{{ gb_dirname }}"
+    path: "{{ jboss_deployment_dir }}"
     recurse: yes
     owner: "{{ jboss_svc_username }}"
     group: "{{ jboss_svc_username }}"
@@ -39,18 +59,18 @@
 - name: Check that the gb xml file finally exists
   become: yes
   stat:
-    path: "{{ gb_dirname + '/' + gb_configfile }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
   register: xmlfilestate
  
 - debug:
-    msg: "filepath {{ gb_dirname + '/' + gb_configfile }} state exists {{ xmlfilestate.stat.exists }}"
+    msg: "filepath {{ jboss_deployment_dir + '/' + gb_configfile }} state exists {{ xmlfilestate.stat.exists }}"
   
 - name: Remove <elastic-load-balancer> section
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"  
   xml:
-    path: "{{ gb_dirname + '/' + gb_configfile }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
     xpath: /cumulogic-app/services/elastic-load-balancer
     state: absent
   when: xmlfilestate.stat.exists == True 
@@ -58,11 +78,11 @@
 - name: Check that the app war file exists
   become: yes
   stat:
-    path: "{{ gb_dirname + '/' + gb_warfile }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_warfile }}"
   register: warfilestate
 
 - debug:
-    msg: "filepath {{ gb_dirname + '/' + gb_warfile }} state finally exists {{ warfilestate.stat.exists }}"
+    msg: "filepath {{ jboss_deployment_dir + '/' + gb_warfile }} state finally exists {{ warfilestate.stat.exists }}"
 
 - name: copy config file to configuration folder
   become: yes
@@ -70,7 +90,7 @@
   become_user: "{{ jboss_svc_username }}"  
   copy:
     remote_src: yes
-    src: "{{ gb_dirname + '/' + gb_configfile }}"
+    src: "{{ jboss_deployment_dir + '/' + gb_configfile }}"
 # to use xml filename only we need .split('/')[-1] in because gb_configfile contains subdir name    
     dest: "{{ jboss_rootdir }}/standalone/configuration/{{ gb_configfile.split('/')[-1] }}"
     owner: "{{ jboss_svc_username }}"
@@ -94,7 +114,7 @@
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
-  command: "rm {{ gb_dirname + '/' + gb_configfile }} {{ gb_dirname + '/' + gb_dbdump }}"
+  command: "rm {{ jboss_deployment_dir + '/' + gb_configfile }} {{ jboss_deployment_dir + '/' + gb_dbdump }}"
   register: remold
   
 - debug:
@@ -106,7 +126,7 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   stat:
-    path: "{{ gb_dirname + '/' + gb_warfile + '.deployed' }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_warfile + '.deployed' }}"
   register: deployedfilestate
 
 
@@ -115,16 +135,17 @@
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"
   file:
-    path: "{{ gb_dirname + '/' + gb_warfile + '.dodeploy' }}"
+    path: "{{ jboss_deployment_dir + '/' + gb_warfile + '.dodeploy' }}"
     state: touch
   when: warfilestate.stat.exists == True and deployedfilestate.stat.exists == False 
   
-- name: Check wildfly guestbook app after deploy 
+- name: Check wildfly guestbook app http url after deploy 
   uri:
     url: "http://localhost:8080/{{ app_name }}/"
     return_content: yes
 #    validate_certs: False
   register: httpwebpage
+  failed_when: false
 
 - debug:
     var: httpwebpage
