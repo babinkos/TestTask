@@ -82,8 +82,7 @@
 
 - name: Wait 60 seconds for port 9990 on private interface
   wait_for:
-#  here is to states for host IP - before apllying changes in configuration/standalone.xml and after, so need to check on any IP  
-    host: 127.0.0.1
+    host: {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }}
     port: 9990
     delay: 1
     state: started
