@@ -30,8 +30,6 @@
   get_url:
     url: "{{ node_repo }}"
     dest: "{{ jboss_deployment_dir + '/' + node_appname + '/' }}"
-    creates: "{{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }}"
-#    remote_src: yes
   when: nodewarfilestate.stat.exists == False
 
 # no need:
