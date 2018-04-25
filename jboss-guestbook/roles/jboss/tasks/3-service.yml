@@ -60,14 +60,36 @@
   become_method: sudo
   systemd: state=started name=wildfly.service  enabled=yes
 
-- name: Wait 60 seconds for port 9990
+# file checks can be done before any tcp port probing, will be useful have such results in clause for wait
+- name: check standalone_xml_file with grep if already changed
+  command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
+  ignore_errors: yes
+  register: mgmt_ip_bind
+
+- debug:
+    var: mgmt_ip_bind
+
+- name: Wait 60 seconds for port 9990 on localhost
   wait_for:
 #  here is to states for host IP - before apllying changes in configuration/standalone.xml and after, so need to check on any IP  
-    host: 0.0.0.0
+    host: 127.0.0.1
     port: 9990
     delay: 1
     state: started
     timeout: 60
+# when changes to binding is not yet done    
+  when: '"0" in mgmt_ip_bind.stdout'
+
+- name: Wait 60 seconds for port 9990 on private interface
+  wait_for:
+#  here is to states for host IP - before apllying changes in configuration/standalone.xml and after, so need to check on any IP  
+    host: 127.0.0.1
+    port: 9990
+    delay: 1
+    state: started
+    timeout: 60
+# when changes to binding is already done and we can grep binding from xml    
+  when: '"0" not in mgmt_ip_bind.stdout'
 
 - name: check if jboss/wildfly mgmt interface is on loopback address
   shell: 'netstat -na | fgrep -c "127.0.0.1:9990"'
@@ -83,16 +105,8 @@
   register: standalone_xml_file
   
 - debug:
-    var: standalone_xml_file
+    var: standalone_xml_file.stat.exists
 
-- name: check standalone_xml_file with grep if already changed
-  command: "fgrep -c {{ hostvars[inventory_hostname]['groups']['web-servers'][0] }} {{ jboss_rootdir }}/standalone/configuration/standalone.xml"
-  ignore_errors: yes
-  register: mgmt_ip_bind
-
-- debug:
-    var: mgmt_ip_bind
-  
 - name: Wait 2 seconds for port 8080 to become open
   wait_for:
     port: 8080
