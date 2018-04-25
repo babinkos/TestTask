@@ -100,6 +100,16 @@
 - debug:
     var: remold
 
+#.deployed
+- name: Check that the deployed state file exists
+  become: yes
+  become_method: sudo
+  become_user: "{{ jboss_svc_username }}"
+  stat:
+    path: "{{ gb_dirname + '/' + gb_warfile + '.deployed' }}"
+  register: deployedfilestate
+
+
 - name: Deploy war app in jboss/wildfly
   become: yes
   become_method: sudo
@@ -107,7 +117,7 @@
   file:
     path: "{{ gb_dirname + '/' + gb_warfile + '.dodeploy' }}"
     state: touch
-  when: warfilestate.stat.exists == True 
+  when: warfilestate.stat.exists == True and deployedfilestate.stat.exists == False 
   
 - name: Check wildfly guestbook app after deploy 
   uri:
@@ -120,6 +130,6 @@
     var: httpwebpage
 
 #- fetch:
-#    src: 
+#    src: /usr/local/share/wildfly/wildfly-12.0.0.Final/standalone/log/server.log
 
    

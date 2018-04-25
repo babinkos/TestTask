@@ -1,3 +1,9 @@
+- name: check if service config file already exists
+  become: yes
+  stat:
+    path: /etc/default/wildfly.conf
+  register: wildconffilestate  
+
 - name: create wildfly config file
   become: yes
   become_method: sudo
@@ -9,7 +15,14 @@
     mode: '0644'
     backup: yes
   notify:
-      - reload systemctl    
+      - reload systemctl
+  when: wildconffilestate.stat.exists == False
+
+- name: check if systemd service file already exists
+  become: yes
+  stat:
+    path: /etc/systemd/system/wildfly.service
+  register: wildsvcfilestate 
 
 - name: create wildfly service file
   become: yes
@@ -21,6 +34,13 @@
     group: root
     mode: '0644'
     backup: yes        
+  when: wildsvcfilestate.stat.exists == False
+
+- name: check if launch script file already exists
+  become: yes
+  stat:
+    path: "{{ jboss_bindir }}/launch.sh"
+  register: launchfilestate 
 
 - name: create wildfly startup stript
   become: yes
@@ -33,6 +53,7 @@
     group: "{{ jboss_svc_username }}"
     mode: '0755'
     backup: yes   
+  when: launchfilestate.stat.exists == False
     
 - name: Make sure wildfly service is running
   become: yes
