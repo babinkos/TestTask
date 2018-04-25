@@ -1,0 +1,8 @@
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'
+
+[db-servers]
+192.168.56.102  ansible_user=vagrant
+
+[web-servers]
+192.168.56.102  ansible_user=vagrant

@@ -46,12 +46,13 @@ sudo apt-get install ansible -y
 echo "restoring scheduled apt daily jobs after upgrading"
 sudo systemctl start apt-daily.timer
 
-echo "[all:vars]" | sudo tee /etc/ansible/hosts
-echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
-echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
-echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
-echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
-echo "$WEBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
+#echo "[all:vars]" | sudo tee /etc/ansible/hosts
+#echo "ansible_ssh_common_args='-o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-rsa'" | sudo tee --append /etc/ansible/hosts
+#echo "[db-servers]" | sudo tee --append /etc/ansible/hosts
+#echo "$DBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
+#echo "[web-servers]" | sudo tee --append /etc/ansible/hosts
+#echo "$WEBIP ansible_user=vagrant" | sudo tee --append /etc/ansible/hosts
+
 echo "AuthorizedKeysFile %h/.ssh/authorized_keys" | sudo tee --append /etc/ssh/sshd_config
 mkdir TestTask
 cd TestTask
@@ -65,6 +66,6 @@ sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 # eralier was installed: ansible-galaxy -c -v install geerlingguy.mysql
 ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
-ansible-playbook /home/vagrant/TestTask/jboss-guestbook/site.yml -v 2>&1 | tee playlog.txt
+ansible-playbook -i /home/vagrant/TestTask/jboss-guestbook/hosts /home/vagrant/TestTask/jboss-guestbook/site.yml -v 2>&1 | tee playlog.txt
 curl "http://$WEBIP:8080/guestbookapp/"
 curl "http://$WEBIP:8080/node-info/"

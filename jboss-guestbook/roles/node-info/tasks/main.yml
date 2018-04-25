@@ -23,7 +23,7 @@
 - debug:
     msg: "filepath {{ jboss_deployment_dir +'/' + node_appname + '/' + node_warfile }} state exists {{ nodewarfilestate.stat.exists }}"
 
-- name: Download nodeapp zip 
+- name: Download nodeapp war 
   become: yes
   become_method: sudo
   become_user: "{{ jboss_svc_username }}"  
