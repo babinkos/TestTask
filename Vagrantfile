@@ -2,9 +2,10 @@
 # vi: set ft=ruby :
 
 # old box name was "ubuntu/xenial64" and new bento/ubuntu-16.04 but very slow from vagrantcloud, reverted
-#boxname = "ubuntu/xenial64"
-# pybox is a tuned ubuntu/xenial64 local vbox - see instructions at https://github.com/babinkos/vagrant-pybox
-boxname = "pybox"
+boxname = "ubuntu/xenial64"
+# pybox is a tuned ubuntu/xenial64 local vbox with preinstalled python packages 
+# - see instructions at https://github.com/babinkos/vagrant-pybox
+#boxname = "pybox"
 
 Vagrant.require_version ">= 2.0.0"
 ipsubnet="192.168.56."

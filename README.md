@@ -8,6 +8,8 @@
 - http://localhost:8080/node-info/
 - http://localhost:8080/guestbookapp/
 
+https also available but port is 8443
+
 6. For management purposes you can use:
 - http://localhost:9990/console
 

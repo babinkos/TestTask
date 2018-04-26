@@ -67,16 +67,25 @@ sudo chown -R vagrant:vagrant /home/vagrant/TestTask
 ansible-galaxy install -c -v -r /home/vagrant/TestTask/jboss-guestbook/requirements.yml
 ansible all -m ping -v
 ansible-playbook -i /home/vagrant/TestTask/jboss-guestbook/hosts /home/vagrant/TestTask/jboss-guestbook/site.yml 2>&1 | tee playlog.txt
-echo http://$WEBIP:8080/guestbookapp/
-echo http://$WEBIP:8080/node-info/
-curl -sS -v --url http://$WEBIP:8080/node-info/ --output sitetest1.txt 
+
+echo "testing availability of  http://$WEBIP:8080/node-info/ with curl utility"
+echo .
+echo ..
+echo ...
+curl -sS --url http://$WEBIP:8080/node-info/ --output sitetest1.txt 
 cat sitetest1.txt
 echo .
 echo ..
 echo ...
-curl -sS -v --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt 
+echo "testing availability of http://$WEBIP:8080/guestbookapp/ with curl utility"
+curl -sS --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt 
 cat sitetest2.txt
 echo .
 echo ..
 echo ...
 echo "...Job is done !!"
+echo .
+echo ..
+echo ...
+echo "You can use http://localhost:8080/guestbookapp/ from host machine to test guestbookapp"
+echo "You can use http://localhost:8080/node-info/ from host machine to test node-info app"
