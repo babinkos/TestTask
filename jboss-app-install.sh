@@ -9,8 +9,11 @@ sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chmod 400 /home/vagrant/.ssh/id_rsa
 #ssh-keygen -y -e -f /home/vagrant/.ssh/id_rsa >> /home/vagrant/.ssh/authorized_keys
 ssh-keyscan -H $1 >> /home/vagrant/.ssh/known_hosts
-sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
-sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
+sudo sed -i 's%deb http://us.archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+sudo sed -i 's%deb http://archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+# old was:
+#sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
+#sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get -y install python-minimal

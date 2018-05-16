@@ -20,8 +20,10 @@ sudo chmod 400 /home/vagrant/.ssh/id_rsa
 echo "ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts"
 ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts
 echo "/etc/apt/sources.list updated to use mirror.yandex.ru"
-sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
-sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
+sudo sed -i 's%deb http://us.archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+sudo sed -i 's%deb http://archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+#sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
+#sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 echo "update package list"
 #pgrep -f 'apt|adept|dpkg'
 sudo lsof /var/lib/dpkg/lock
@@ -72,13 +74,13 @@ echo "testing availability of  http://$WEBIP:8080/node-info/ with curl utility"
 echo .
 echo ..
 echo ...
-curl -sS --url http://$WEBIP:8080/node-info/ --output sitetest1.txt 
+curl -sS --url http://$WEBIP:8080/node-info/ --output sitetest1.txt
 cat sitetest1.txt
 echo .
 echo ..
 echo ...
 echo "testing availability of http://$WEBIP:8080/guestbookapp/ with curl utility"
-curl -sS --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt 
+curl -sS --url http://$WEBIP:8080/guestbookapp/ --output sitetest2.txt
 cat sitetest2.txt
 echo .
 echo ..
