@@ -19,9 +19,13 @@ sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chmod 400 /home/vagrant/.ssh/id_rsa
 echo "ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts"
 ssh-keyscan -H $DBIP >> /home/vagrant/.ssh/known_hosts
-echo "/etc/apt/sources.list updated to use mirror.yandex.ru"
-sudo sed -i 's%deb http://us.archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
-sudo sed -i 's%deb http://archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+echo "/etc/apt/sources.list updated to use BY mirror"
+sudo sed -i 's%deb http:\/\/us.archive.ubuntu.com%deb http:\/\/by.archive.ubuntu.com%' /etc/apt/sources.list
+sudo sed -i 's%deb http:\/\/archive.ubuntu.com%deb http:\/\/by.archive.ubuntu.com%' /etc/apt/sources.list
+sudo sed -i 's%deb-src http:\/\/us.archive.ubuntu.com%deb-src http:\/\/by.archive.ubuntu.com%' /etc/apt/sources.list
+sudo sed -i 's%deb-src http:\/\/archive.ubuntu.com%deb-src http:\/\/by.archive.ubuntu.com%' /etc/apt/sources.list
+#sudo sed -i 's%deb http://us.archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
+#sudo sed -i 's%deb http://archive.ubuntu.com%deb http://by.archive.ubuntu.com%' /etc/apt/sources.list
 #sudo sed -i 's%us.archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 #sudo sed -i 's%archive.ubuntu.com%mirror.yandex.ru%' /etc/apt/sources.list
 echo "update package list"
